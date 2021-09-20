@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{{.StylesPath}}main.css">
+        <link rel="stylesheet" href="{{.StylesPath}}homepage.css">
+        <title>DAZ Space</title>
+    </head>
+    <body>
+        <div style="display:none; overflow:hidden;">
+            <button type="button" name="button" onclick="popupOpen(hello, test)"></button>
+        </div>
+        <div id="test" style="display:none; overflow:hidden;">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+        <div class="wrapper flex-center">
+            <header>
+                <div class="big-line animated curve"></div>
+                <div class="small-line animated curve"></div>
+                <nav id="navbar">
+                    <section id="contacts">
+                        <h3 class="description">Contact me:</h3>
+                        <nav class="buttons-holder">
+                            <a href="https://t.me/DazFather"><i class="fa fa-telegram"></i>Telegram</a>
+                            <a href="mailto:email@example.com"><i class="fa fa-envelope"></i>Mail</a>
+                        </nav>
+                    </section>
+                </nav>
+                <h1 class="animated" subtitle="Davide Lavermicocca">DazFather</h1>
+                <section id="myWorks">
+                    <h3 class="description">My works:</h3>
+                    <nav class="buttons-holder flex-center">
+                        <a href="https://github.com/DazFather/" target="_blank"><i class="fa fa-github"></i><span class="button-name">Back</span><span>end</span></a>
+                        <a href="https://codepen.io/DazFather"  target="_blank"><i class='fa fa-codepen'></i><span class="button-name">Front</span><span>end</span></a>
+                    </nav>
+                </section>
+                <section id="myDescription">
+                    <p>
+                        I'm a developer. I'm currently focusing on back-end development but I like front-end too.<br>
+                        My favourite coding language is <code>Golang</code> but I'm also confident with <code>Python</code>. I've also touch <code>Javascript</code>, <code>C</code> and <code>Php</code> on a really basic level
+                    </p>
+                </section>
+            </header>
+            <section id="myWebsite" class="flex-center">
+                <h3>About <code class="space">DazSpace</code>:</h3>
+                <p>A chill place to understand my passiones, expecially coding</p>
+            </section>
+            <main>
+                {{if .Value}}
+                <h3 class="description">Blog:</h3>
+                <section id="myArticles">
+                    <h3>Last articles</h3>
+                    <nav>
+                        {{range .Value}}
+                            <article>
+                                {{if .Cover}}
+                                <img class="cover" src="{{.Cover}}" alt="Cover of the article: {{.Title}}">
+                                {{end}}
+                                <div class="snippet">
+                                    <a class="title" href="/blog/{{.Link}}">{{.Title}}</a>
+                                    <p>{{.Abstract}}</p>
+                                </div>
+                            </article>
+                        {{end}}
+                        <article>
+                            <img class="cover" src="https://telegra.ph/file/c8ce8d9c394b7921aa80b.jpg" alt="neko girl with christmas dress on">
+                            <div class="snippet">
+                                <a class="title" href="#">Lorem ipsum</a>
+                                <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            </div>
+                        </article>
+                        <article>
+                            <div class="snippet">
+                                <strong class="title">Lorem ipsum</strong>
+                                <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            </div>
+                        </article>
+                        <article>
+                            <div class="snippet">
+                                <strong class="title">Lorem ipsum</strong>
+                                <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            </div>
+                        </article>
+                        <article>
+                            <img class="cover" src="https://telegra.ph/file/a41c31e13fcbb85b8dba0.jpg" alt="neko girl with christmas dress on">
+                            <div class="snippet">
+                                <a class="title" href="#">Lorem ipsum</a>
+                                <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            </div>
+                        </article>
+                        <article>
+                            <img class="cover" src="https://telegra.ph/file/a41c31e13fcbb85b8dba0.jpg" alt="neko girl with christmas dress on">
+                            <div class="snippet">
+                                <a class="title" href="#">Lorem ipsum</a>
+                                <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            </div>
+                        </article>
+                    </nav>
+                </section>
+                {{end}}
+                <section>
+                    <p>If you are actually reading this you must be pretty bored...</p>
+                    <p style="color: gray">Well if you have nothing to do consider to give me a feedback about this site (because is still work in progress)</p>
+                    <p style="color: gray">also, did you know that turning on/off the animation on your device or browser settings will change the appearance of this site too? Cool eh</p>
+                </section>
+            </main>
+            <footer id="footer" class="flex-center">
+                <p>This website has been made by me without any sitebuilder, CMS or framework.<br> Only in pure HTML and CSS. <a href="#" class="gradient-link">Check out the code</a></p>
+            </footer>
+        </div>
+    </body>
+</html>

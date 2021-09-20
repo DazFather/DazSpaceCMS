@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- /resources/styles/robe.css -->
+        <!-- {{.Value.Title}} -->
+        <link rel="stylesheet" href="{{.StylesPath}}main.css">
+        <link rel="stylesheet" href="{{.StylesPath}}article.css">
+        
+        <title>Article</title>
+    </head>
+    <body>
+        <nav id="infobar" class="white-section">
+            <div>
+                <h1>{{.Value.Title}}</h1>
+                <em>Written by <a href="{{.Value.AuthorLink}}"><code class="space">{{.Value.Author}}</code></a></em>
+                <nav id="index">
+                    <em onclick="this.parentElement.classList.toggle('expanded')">Chapter Index</em>
+                    <ul class="details">
+                        {{range .Value.Chapters}}
+                            <li>{{.Name}}</li>
+                        {{end}}
+                    </ul>
+                </nav>
+                <nav class="progress-container">
+                    <nav id="progressbar"></nav>
+                </nav>
+            </div>
+        </nav>
+        <header>
+            <img class="cover" src="{{.Value.AttachedCover}}" alt="Cover of the following article">
+        </header>
+        <div class="animated curve"></div>
+        <main>
+            <section class="content white-section" onscroll="UpdateProgress()">
+                {{range .Value.Chapters}}
+                    <h2>{{.Name}}</h2>
+                    {{.Content}}
+                {{end}}
+            </section>
+        </main>
+        <footer id="footer" class="flex-center">
+            <p>This website has been made by me without any sitebuilder, CMS or framework.<br> Only in pure HTML and CSS.</p>
+        </footer>
+        <script src="{{.ScriptPath}}pinningInfobar.js" charset="utf-8"></script>
+        <script src="{{.ScriptPath}}progressbar.js" charset="utf-8"></script>
+        {{range .Value.AttachedScripts}}
+            <link rel="stylesheet" href="{{.}}">
+        {{end}}
+    </body>
+</html>

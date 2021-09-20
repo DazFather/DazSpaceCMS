@@ -1,0 +1,179 @@
+:root {
+    --White: hsl(0, 0%, 85%);
+    --Gray: hsl(0, 0%, 60%);
+}
+
+body {
+    color: var(--White);
+    background-color: var(--Carbon);
+    position: relative;
+}
+
+header {
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    display: flex;
+    justify-content: center;
+    margin: 1em;
+    margin-right: 2em;
+}
+header .cover {
+    width: 100%;
+    border-radius: 1em;
+}
+
+#index {
+    margin-top: 0.3em;
+}
+#index .details {
+    max-height: 0;
+    padding: 0 2em;
+    margin: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.5s, max-height 0.5s ease-in-out;
+}
+#index .details a {
+    color: inherit;
+    text-decoration: none;
+}
+
+#index em {
+    font-style: normal;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 0.3em;
+    padding: 0.1em 0.2em;
+    background-color: hsla(0, 0%, 50%, 0.5);
+    transition: background-color 0.5s;
+}
+#index em::before {
+    content: "►";
+    font-size: 0.8em;
+    display: inline-block;
+    margin: 0.2em 0.5ch;
+    font-weight: bold;
+    transform: rotate(0);
+    transition: transform 0.5s;
+}
+#index em:hover {
+    background-color: hsla(260, 20%, 50%, 0.5);
+}
+#index.expanded em {
+    background-color: hsla(290, 20%, 50%, 0.5);
+}
+#index.expanded .details{
+    max-height: 10em;
+    opacity: 1;
+}
+#index.expanded em::before {
+    transform: rotate(90deg);
+}
+
+#infobar {
+    position: sticky;
+    top: -0.1em;
+    margin: 2em;
+    z-index: 1;
+    min-width: 16em;
+    opacity: 0.75;
+    box-shadow: 0 0 1em var(--DarkCarbon);
+    transition: opacity 0.5s, min-width 0.5s, margin 0.5s, border-radius 1s;
+}
+#infobar:hover {
+    opacity: 1;
+}
+#infobar h1 {
+    font-size: 1.25em;
+    padding: 0;
+}
+#infobar div {
+    margin: 0.5em;
+}
+
+#infobar.is-pinned {
+    opacity: 1;
+	margin: 0;
+    border-radius: 0 0 0.5em 0.5em;
+    min-width: 100%;
+}
+
+.progress-container {
+    display: block;
+    width: 100%;
+    border-radius: 0.5em;
+    overflow: hidden;
+    margin: auto;
+    margin-top: 0.5em;
+    height: 0;
+    transition: height 0.5s;
+    background-color: var(--Gray);
+}
+#progressbar {
+    margin: 0;
+    height: 0.5em;
+    background: var(--RedGradient);
+    width: 100%;
+    border-radius: inherit;
+
+    transition: height 0.5s, width 0.1s;
+}
+
+
+#infobar.is-pinned .progress-container {
+    height: 0.5em;
+    visibility: visible;
+}
+
+.white-section {
+    background-color: var(--White);
+    color: var(--DarkCarbon);
+    display: inline-block;
+    border-radius: 1em;
+}
+
+.content {
+    margin: 1em;
+    padding: 1em;
+}
+
+#footer {
+    position: static;
+    background-color: var(--DarkCarbon);
+    color: gray;
+    height: 5em;
+}
+
+.curve {
+    position: absolute;
+    top: -75vh;
+    right: -10em;
+    width: 600px;
+    height: 600px;
+    border-radius: 100% 90% 80% 90%;
+    border: 5px solid var(--Blue);
+    -webkit-box-shadow: -5px 5px 0 0 var(--Magenta);
+    z-index: -2;
+    opacity: 0.5;
+    animation: live-wave 6s linear infinite;
+}
+@keyframes live-wave {
+    0% {transform: rotate(0); top: -75vh; border-color: var(--Blue); }
+    50% {transform: rotate(180deg); top: -76vh; border-color: var(--Purple); }
+    100% {transform: rotate(360deg); top: -75vh; border-color: var(--Blue); }
+}
+
+@media (orientation: landscape) {
+    header {
+        position: absolute;
+        width: 50%;
+    }
+
+    #infobar {
+        max-width: 60%;
+        margin-left: 40%;
+    }
+}

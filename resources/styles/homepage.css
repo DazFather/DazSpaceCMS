@@ -1,0 +1,359 @@
+/* ---- BODY ---- */
+
+body {
+    position: fixed;
+    background: var(--FullGradient);
+}
+.wrapper {
+    background-color: var(--Carbon);
+    margin: 0.25em;
+    margin-right: 0.5em;
+    display: inline-block;
+    border-radius: 1em;
+    color: white;
+    overflow: hidden;
+    width: calc(100% - 0.75em);
+    min-height: calc(100% - 0.5em);
+    z-index: 1;
+    position: relative;
+}
+
+/* ---- NAVBAR ---- */
+
+#navbar {
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 1em;
+}
+
+/* ---- Contacts section ---- */
+
+#contacts {
+    margin-right: 0.5em;
+}
+#contacts .description {
+    margin-top: -1em;
+}
+#contacts a {
+    border-radius: 0.3em;
+    padding: 0.2em 0.3em;
+    display: inline-block;
+    text-decoration: none;
+    color: lightgray;
+    background-color: var(--DarkCarbon);
+    filter: brightness(90%) grayscale(10%);
+    transition: filter 1s, color 1s, background-color 1s, transform 1s;
+}
+#contacts a i {
+    margin-right: 0.5ch;
+}
+#contacts .buttons-holder a:last-child{
+    background-color: var(--Purple);
+}
+#contacts .buttons-holder a:first-child{
+    background-color: var(--Blue);
+}
+#contacts .buttons-holder a:hover {
+    background-color: var(--Magenta);
+    filter: brightness(110%) grayscale(0%);
+    transform: scale(1.05);
+}
+
+/* ---- HEADER ---- */
+
+header {
+    display: inline-block;
+    width: 100%;
+    background: var(--);
+    position: relative;
+}
+
+header h1{
+    text-align: center;
+    font-size: 4em;
+    margin: 0;
+
+    background: linear-gradient(to right, var(--Blue) 20%, var(--Magenta) 40%, var(--Magenta) 60%, var(--Blue) 80%, var(--Blue) 100%); /*-webkit-linear-gradient(#eee, #333);*/
+    background-size: 200% auto;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: bg-swap 6s linear infinite;
+
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+@keyframes bg-swap {
+    to {background-position: 200% center;}
+}
+header h1::after {
+    content: attr(subtitle);
+    background: white;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+/* ---- Animated curved lines on the background ---- */
+.curve {
+    position: absolute;
+    top: -10%;
+    border-radius: 100% 90% 80% 90%;
+    border: 5px solid var(--Blue);
+    -webkit-box-shadow: -5px 5px 0 0 var(--Magenta);
+    z-index: -1;
+    opacity: 0.3;
+    animation: live-wave 6s linear infinite;
+}
+.small-line {
+    bottom: -500vw;
+    right: -50vw;
+    width: 100vw;
+    height: 100vw;
+    filter: hue-rotate(0);
+}
+.big-line {
+    bottom: -300vw;
+    right: -100vw;
+    width: 200vw;
+    height: 150vw;
+    filter: hue-rotate(45deg) contrast(80%);
+}
+@keyframes live-wave {
+    0% {transform: rotate(0); top: -10%; border-color: var(--Blue); }
+    50% {transform: rotate(180deg); top: -8%; border-color: var(--Purple); }
+    100% {transform: rotate(360deg); top: -10%; border-color: var(--Blue); }
+}
+
+/* ---- My Works section ---- */
+
+#myWorks .buttons-holder {
+    display: inline-flex;
+    gap: 0.3ch;
+    color: darkgray;
+    border-radius: 2em;
+    z-index: 2;
+}
+
+#myWorks .description {
+    z-index: 1;
+    position: sticky;
+}
+
+#myWorks .buttons-holder a {
+    box-shadow: 0 0 2em var(--DarkCarbon);
+    -webkit-box-shadow: 0 0 2em 0.5em var(--DarkCarbon);
+    border: 1px solid var(--DarkCarbon);
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    margin: 0;
+    padding: 0.25em 0.5em;
+    width: 100%;
+    height: 100%;
+    background-color: #222;
+    filter: brightness(100%);
+    transition: filter 1s, background-color 1s;
+}
+#myWorks .button-name {
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+    flex-direction: column;
+    transition: color 1.5s;
+}
+#myWorks .button-name::after {
+    content: " ";
+    display: inline-block;
+    border: none;
+    border-radius: 1em;
+    padding: 0;
+    margin: 0;
+
+    width: 100%;
+    filter: grayscale(100%);
+    height: 0.2em;
+    transition: width 1s, height 1s;
+}
+#myWorks .buttons-holder i {
+    font-size: 1.5em;
+    margin-left: -0.1em;
+    margin-right: 0.2em;
+    color: inherit;
+    transition: filter 0.5s, color 0.5s;
+}
+#myWorks .buttons-holder a:hover{
+    background-color: black;
+    filter: brightness(125%);
+}
+#myWorks .buttons-holder a:hover .button-name::after{
+    filter: grayscale(0%);
+    width: calc(100% + 3ch);
+    height: 0.25em;
+}
+
+/* left button (Backend) */
+#myWorks .buttons-holder a:first-child{
+    border-radius: 2em 0.4em 0.4em 2em;
+    text-align: right;
+}
+#myWorks .buttons-holder a:first-child .button-name::after{
+    background: var(--SecondGradient);
+}
+#myWorks .buttons-holder a:first-child:hover .button-name, #myWorks .buttons-holder a:first-child:hover i {
+    color: var(--Blue);
+}
+
+/* right button (Frontend) */
+#myWorks .buttons-holder a:last-child{
+    border-radius: 0.4em 2em 2em 0.4em;
+    text-align: left;
+}
+#myWorks .buttons-holder a:last-child .button-name::after{
+    background: var(--FirstGradient);
+}
+#myWorks .buttons-holder a:last-child:hover .button-name, #myWorks .buttons-holder a:last-child:hover i {
+    color: var(--Purple);
+}
+
+
+/*  ---- My Description (who am I) section ----*/
+
+#myDescription {
+    color: darkgray;
+    text-align: left;
+    margin: 1.5em auto;
+    width: 40em;
+    max-width: 85%;
+    font-size: 1.1em;
+}
+
+/*  ---- My Whebsite (about this site) section ----*/
+
+#myWebsite {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 1em;
+    margin: auto;
+    width: 90%;
+}
+#myWebsite p {
+    text-align: left;
+}
+
+/* ---- MAIN ---- */
+
+main {
+    margin: 1em;
+    margin-bottom: 5.5em; /* same height as footer */
+}
+
+/*  ---- My Articles section ----*/
+
+#myArticles {
+    background: var(--RedGradient);
+    display: inline-block;
+    max-width: 95%;
+    width: max-content;
+    border-radius: 1.5em;
+    margin: auto;
+    overflow: hidden;
+}
+
+#myArticles h3 {
+    margin: 0.5em;
+    padding: 0;
+}
+
+#myArticles nav {
+    background-color: var(--Carbon);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+    border: 5px solid var(--Carbon);
+    margin: 0.5em;
+    margin-top: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 1em;
+    max-height: 25em;
+}
+
+#myArticles article {
+    font-size: 0.95em;
+    max-height: 6em;
+    min-height: 3em;
+    overflow: hidden;
+    background-color: var(--LightCarbon);
+    display: inline-flex;
+    gap: 0.3em;
+    border: 0.3em solid var(--LightCarbon);
+    border-radius: 0.3em;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    transition: min-height 0.5s;
+}
+#myArticles article:hover {
+    min-height: 7em;
+}
+
+#myArticles .cover {
+    max-height: inherit;
+    height: 100%;
+    min-height: inherit;
+    width: auto;
+    display: block;
+    border-radius: inherit;
+}
+
+#myArticles .title {
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    color: lightgray;
+    display: inline;
+    font-size: 1.1em;
+    transition: color 0.5s;
+}
+#myArticles .title:hover {
+    color: white;
+}
+
+#myArticles .snippet {
+    display: inline-flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    color: darkgray;
+    overflow: hidden;
+}
+
+#myArticles p {
+    margin: 0;
+    display: inline-block;
+
+    background: linear-gradient(180deg, darkgray 0%, transparent 100%);
+    background-size: 80%;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    max-height: 6em;
+}
+
+/* ---- FOOTER ---- */
+
+#footer {
+    background-color: var(--DarkCarbon);
+    color: gray;
+    height: 5.5em;
+    overflow: auto;
+}

@@ -1,0 +1,89 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-family: sans-serif;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* ---- PALETTE ---- */
+:root {
+    --DarkCarbon: #141414;
+    --Carbon: #222;
+    --LightCarbon: #333333;
+
+    --Magenta: hsl(290, 70%, 50%); /* hex: #BA26D9*/
+    --Purple: hsl(260, 70%, 50%); /* hex: #6126D9 */
+    --Blue: hsl(230, 70%, 50%); /* hex: #2645D9 */
+
+    --FullGradient: linear-gradient(230deg, var(--Magenta) 0%, var(--Blue) 100%);
+    --FirstGradient: linear-gradient(270deg, var(--Magenta) 0%, var(--Purple) 100%);
+    --SecondGradient: linear-gradient(270deg, var(--Purple) 0%, var(--Blue) 100%);
+    --RedGradient: linear-gradient(to right, indianred 0%, var(--Magenta) 100%);
+}
+
+/* ---- UTILITY ---- */
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.description {
+    font-size: 0.6rem;
+    margin-bottom: 0.5em;
+    opacity: 0.4;
+    text-transform: uppercase;
+}
+
+code {
+    background-color: var(--Carbon);
+    padding: 0.1em 0.2em;
+    border-radius: 0.3em;
+    color: hsl(0, 0%, 80%);
+    filter: brightness(80%);
+}
+
+.space {
+    background: linear-gradient(45deg, var(--DarkCarbon) 0%, var(--Blue) 100%);
+    color: white;
+    font-weight: normal;
+}
+
+.gradient-link {
+    background: var(--FirstGradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1em;
+    transition: font-size 1s;
+}
+.gradient-link:hover {
+    font-size: 1.1em;
+}
+
+footer{
+    display: inline-block;
+    font-size: 0.8em;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+/* Disable all the animation if user request it or the device is not powerful */
+@media (prefers-reduced-motion), (update: none), (max-width: 900px) {
+    .animated {
+        -webkit-animation: none !important;
+        -moz-animation: none !important;
+        -o-animation: none !important;
+        -ms-animation: none !important;
+        animation: none !important;
+    }
+}
