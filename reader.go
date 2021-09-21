@@ -194,7 +194,7 @@ func ReadArticle(filename string) (art *Article, err error) {
 }
 
 // It manage the incoming events on the article folder
-func ManageContents(eventType fsnotify.Op, filePath string) (err error) {
+var ManageContents EventAction = func(eventType fsnotify.Op, filePath string) (err error) {
 	var article *Article
 
 	if eventType&fsnotify.Write != fsnotify.Write {
@@ -241,5 +241,12 @@ func ManageContents(eventType fsnotify.Op, filePath string) (err error) {
 	// Save into chache
 	_, err = article.SaveIntoCache()
 
+	return
+}
+
+var UpdateTemplates EventAction = func(eventType fsnotify.Op, filePath string) (err error) {
+	if eventType&fsnotify.Write == fsnotify.Write || eventType&fsnotify.Remove == fsnotify.Remove {
+		LoadTemplates(path.Dir(strings.ReplaceAll(filePath, "\\", "/")))
+	}
 	return
 }

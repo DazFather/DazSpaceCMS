@@ -67,14 +67,18 @@ func HandlerBlog(w http.ResponseWriter, r *http.Request) {
 	// Check inside the contents
 	content, err = os.ReadFile(path.Join(BLOG_FOLDER, requested+".html"))
 	if err != nil {
-		log.Println(err)
+		if !os.IsNotExist(err) {
+			log.Println(err)
+		}
 		Handle404(w, r)
 		return
 	}
 	w.Write(content)
 }
 
-func Detect(PathToWath string) (err error) {
+type EventAction func(fsnotify.Op, string) error
+
+func Detect(PathToWath string, action EventAction) (err error) {
 	var watch *fsnotify.Watcher
 
 	watch, err = fsnotify.NewWatcher()
@@ -96,8 +100,8 @@ func Detect(PathToWath string) (err error) {
 				return errors.New("Internal error meanwhile watching events")
 			}
 			// TODO: better managment of chache and handling deleting of articles
-			if e := ManageContents(event.Op, event.Name); e != nil {
-				log.Println("ManageContents", e)
+			if e := action(event.Op, event.Name); e != nil {
+				log.Println("Detect", e)
 			}
 
 		case e, ok := <-watch.Errors:
@@ -113,9 +117,11 @@ func main() {
 	// Load all templates from folder
 	LoadTemplates(TEMPLATE_FOLDER)
 
-	go Detect(ARTICLE_FOLDER)
+	// Manage changes in the articles (new / edited / deleted)
+	go Detect(ARTICLE_FOLDER, ManageContents)
 
-	// TEMP: add the test article to the records
+	// Manage changes in the templates
+	go Detect(TEMPLATE_FOLDER, UpdateTemplates)
 
 	// All the resources with static handles
 	http.Handle(ResourcesPath, HandlerResources)
