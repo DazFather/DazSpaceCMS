@@ -3,8 +3,6 @@ package main
 import (
 	"bufio"
 	"errors"
-	"fmt"
-	"html"
 	"html/template"
 	"log"
 	"os"
@@ -13,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/russross/blackfriday/v2"
 )
 
 var (
@@ -22,56 +21,10 @@ var (
 )
 
 func parse(text string) (parsed string) {
-	var (
-		tag     string
-		cursor  int
-		wait    = make(map[string]bool)
-		tagName = map[string]string{
-			"_":  "i",
-			"*":  "b",
-			"__": "em",
-			"**": "strong",
-		}
-		rgxToken = regexp.MustCompile(`[_*]{1,2}|#{1,7}|\[.+\]\([\w\./:%&\?!=-]+\)`)
-		rgxEndln = regexp.MustCompile(`\r?\n`)
-	)
+	var content = blackfriday.Run([]byte(text))
 
-	vals := rgxToken.FindAllStringIndex(text, -1)
-	for _, ind := range vals {
-		if cursor > ind[0] {
-			continue
-		}
-		min, max := ind[0], ind[1]
-		token := text[min:max]
-
-		switch true {
-		case wait[token]:
-			tag = "</" + tagName[token] + ">"
-			delete(wait, token)
-
-		case token[0] == '#':
-			tag = fmt.Sprint("<h", len(token), ">")
-			if val := rgxEndln.FindStringIndex(text[max:]); val != nil {
-				parsed += html.EscapeString(text[cursor:min]) + tag
-				parsed += parse(text[max:max+val[0]]) + "</" + tag[1:] + "\n"
-				max = max + val[1]
-				cursor, min = max, max
-				continue
-			}
-		case token[0] == '[':
-			link := strings.Split(token[1:len(token)-1], "](")
-			tag = fmt.Sprint("<a href=\"", link[1], "\">", parse(link[0]), "</a>")
-		default:
-			tag = "<" + tagName[token] + ">"
-			wait[token] = true
-		}
-
-		parsed += html.EscapeString(text[cursor:min]) + tag
-		cursor = max
-	}
-	parsed += html.EscapeString(text[cursor:])
-
-	return
+	content = regexp.MustCompile(`\s*</?p>\s*`).ReplaceAll(content, nil)
+	return string(content)
 }
 
 // Scan of the title, cover art and other attached resources
@@ -159,7 +112,7 @@ func ReadArticle(filename string) (art *Article, err error) {
 			return
 		}
 		if isNewChapter {
-			line = strings.TrimSpace(parse(line[2:]))
+			line = parse(line[2:])
 			newArt.Chapters = append(newArt.Chapters, Chapter{Name: line})
 			nCap++
 			continue
