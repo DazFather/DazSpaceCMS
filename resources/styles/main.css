@@ -15,7 +15,7 @@ html, body {
     --Carbon: #222;
     --LightCarbon: #333333;
 
-    --Magenta: hsl(290, 70%, 50%); /* hex: #BA26D9*/
+    --Magenta: hsl(290, 70%, 50%); /* hex: #BA26D9 */
     --Purple: hsl(260, 70%, 50%); /* hex: #6126D9 */
     --Blue: hsl(230, 70%, 50%); /* hex: #2645D9 */
 
@@ -67,6 +67,100 @@ code {
 }
 .gradient-link:hover {
     font-size: 1.1em;
+}
+
+.snippet-holder {
+    width: max-content;
+    border-radius: 1.5em;
+    margin: auto;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.snippet-holder h3 {
+    margin: 0.5em;
+    padding: 0;
+}
+
+.snippet-holder nav {
+    background-color: var(--Carbon);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+    border: 5px solid var(--Carbon);
+    margin: 0.5em;
+    margin-top: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 1em;
+    max-height: 25em;
+}
+
+.snippet-holder article {
+    font-size: 0.95em;
+    max-height: 6em;
+    min-height: 3em;
+    overflow: hidden;
+    background-color: var(--LightCarbon);
+    display: inline-flex;
+    gap: 0.3em;
+    border: 0.3em solid var(--LightCarbon);
+    border-radius: 0.3em;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    transition: min-height 0.5s;
+}
+.snippet-holder article:hover {
+    min-height: 7em;
+}
+
+.snippet-cover {
+    max-height: inherit;
+    height: 100%;
+    min-height: inherit;
+    width: auto;
+    display: block;
+    border-radius: inherit;
+}
+
+.snippet-holder .title {
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    color: lightgray;
+    display: inline;
+    font-size: 1.1em;
+    transition: color 0.5s;
+}
+.snippet-holder .title:hover {
+    color: white;
+}
+
+.snippet-holder .snippet {
+    display: inline-flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    color: darkgray;
+    overflow: hidden;
+}
+
+.snippet p {
+    margin: 0;
+    display: inline-block;
+
+    background: linear-gradient(180deg, darkgray 0%, transparent 100%);
+    background-size: 80%;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    max-height: 6em;
 }
 
 footer{

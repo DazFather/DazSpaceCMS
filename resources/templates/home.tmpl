@@ -50,13 +50,13 @@
             <main>
                 {{if .Value}}
                 <h3 class="description">Blog:</h3>
-                <section id="myArticles">
+                <section id="myArticles" class="snippet-holder">
                     <h3>Last articles</h3>
                     <nav>
                         {{range .Value}}
                             <article>
                                 {{if .Cover}}
-                                <img class="cover" src="{{.Cover}}" alt="Cover of the article: {{.Title}}">
+                                <img class="snippet-cover" src="{{.Cover}}" alt="Cover of the article: {{.Title}}">
                                 {{end}}
                                 <div class="snippet">
                                     <a class="title" href="/blog/{{.Link}}">{{.Title}}</a>
@@ -65,7 +65,7 @@
                             </article>
                         {{end}}
                         <article>
-                            <img class="cover" src="https://telegra.ph/file/c8ce8d9c394b7921aa80b.jpg" alt="neko girl with christmas dress on">
+                            <img class="snippet-cover" src="https://telegra.ph/file/c8ce8d9c394b7921aa80b.jpg" alt="neko girl with christmas dress on">
                             <div class="snippet">
                                 <a class="title" href="#">Lorem ipsum</a>
                                 <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
@@ -84,14 +84,14 @@
                             </div>
                         </article>
                         <article>
-                            <img class="cover" src="https://telegra.ph/file/a41c31e13fcbb85b8dba0.jpg" alt="neko girl with christmas dress on">
+                            <img class="snippet-cover" src="https://telegra.ph/file/a41c31e13fcbb85b8dba0.jpg" alt="neko girl with christmas dress on">
                             <div class="snippet">
                                 <a class="title" href="#">Lorem ipsum</a>
                                 <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
                             </div>
                         </article>
                         <article>
-                            <img class="cover" src="https://telegra.ph/file/a41c31e13fcbb85b8dba0.jpg" alt="neko girl with christmas dress on">
+                            <img class="snippet-cover" src="https://telegra.ph/file/a41c31e13fcbb85b8dba0.jpg" alt="neko girl with christmas dress on">
                             <div class="snippet">
                                 <a class="title" href="#">Lorem ipsum</a>
                                 <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
@@ -107,7 +107,7 @@
                 </section>
             </main>
             <footer id="footer" class="flex-center">
-                <p>This website has been made by me without any sitebuilder, CMS or framework.<br> Only in pure HTML and CSS. <a href="#" class="gradient-link">Check out the code</a></p>
+                <p>This website has been made by me without any sitebuilder, CMS or framework.<br> Only in pure HTML and CSS. <a href="https://github.com/DazFather/DazSpaceCMS" class="gradient-link">Check out the code</a></p>
             </footer>
         </div>
     </body>

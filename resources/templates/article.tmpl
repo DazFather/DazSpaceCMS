@@ -3,40 +3,108 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- /resources/styles/robe.css -->
         <!-- {{.Value.Title}} -->
         <link rel="stylesheet" href="{{.StylesPath}}main.css">
         <link rel="stylesheet" href="{{.StylesPath}}article.css">
-        
+
         <title>Article</title>
     </head>
     <body>
-        <nav id="infobar" class="white-section">
-            <div>
-                <h1>{{.Value.Title}}</h1>
-                <em>Written by <a href="{{.Value.AuthorLink}}"><code class="space">{{.Value.Author}}</code></a></em>
-                <nav id="index">
-                    <em onclick="this.parentElement.classList.toggle('expanded')">Chapter Index</em>
-                    <ul class="details">
-                        {{range .Value.Chapters}}
-                            <li>{{.Name}}</li>
-                        {{end}}
-                    </ul>
-                </nav>
-                <nav class="progress-container">
-                    <nav id="progressbar"></nav>
-                </nav>
-            </div>
+        <nav id="navbar" class="flex-center">
+            <a href=".." class="gradient-link">DazSpace</a>
         </nav>
-        <header>
-            <img class="cover" src="{{.Value.AttachedCover}}" alt="Cover of the following article">
+        <header class="article-header">
+            <div class="bg cover">
+                <img src="{{.Value.AttachedCover}}" alt="Cover of the following article">
+            </div>
+            <div class="animated curve"></div>
+            <aside id="suggested" class="snippet-holder">
+                <h3 class="caps">Suggested</h3>
+                <nav>
+                    <article>
+                        <img class="snippet-cover" src="https://telegra.ph/file/c8ce8d9c394b7921aa80b.jpg" alt="neko girl with christmas dress on">
+                        <div class="snippet">
+                            <a class="title" href="#">Lorem ipsum</a>
+                            <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        </div>
+                    </article>
+                    <article>
+                        <div class="snippet">
+                            <strong class="title">Lorem ipsum</strong>
+                            <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        </div>
+                    </article>
+                    <article>
+                        <div class="snippet">
+                            <strong class="title">Lorem ipsum</strong>
+                            <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        </div>
+                    </article>
+                    <article>
+                        <img class="snippet-cover" src="https://telegra.ph/file/a41c31e13fcbb85b8dba0.jpg" alt="neko girl with christmas dress on">
+                        <div class="snippet">
+                            <a class="title" href="#">Lorem ipsum</a>
+                            <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        </div>
+                    </article>
+                    <article>
+                        <img class="snippet-cover" src="https://telegra.ph/file/a41c31e13fcbb85b8dba0.jpg" alt="neko girl with christmas dress on">
+                        <div class="snippet">
+                            <a class="title" href="#">Lorem ipsum</a>
+                            <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        </div>
+                    </article>
+                </nav>
+            </aside>
+            <aside id="index" class="white-section">
+                <h3 onclick="this.parentElement.classList.toggle('expanded')" class="caps">Chapters</h3>
+                <ul class="details">
+                    {{range .Value.Chapters}}
+                    <li>{{.Name}}</li>
+                    {{end}}
+                </ul>
+            </aside>
         </header>
-        <div class="animated curve"></div>
         <main>
+            <nav id="infobar" class="white-section">
+                <div>
+                    <h1>{{.Value.Title}}</h1>
+
+                    <button id="shareBtn" onclick="clickToCopy(this)">
+                        <div>
+                            <p class="tooltip">Link Copied!</p>
+                            <span>
+                                <i class="fa fa-link"></i>
+                                Copy link
+                            </span>
+                        </div>
+                    </button>
+                    <script type="text/javascript">
+                        function clickToCopy(elem) {
+                            // Copy URL to clipboard
+                            navigator.clipboard.writeText(window.location.href);
+                            // Show the tooltip
+                            var tooltip = elem.querySelector('.tooltip');
+                            tooltip.classList.toggle('opened');
+                            setTimeout(() => tooltip.classList.toggle('opened'), 3000)
+
+                        }
+                    </script>
+                    <br>
+                    <em>Written by <a href="{{.Value.AuthorLink}}"><code class="space">{{.Value.Author}}</code></a></em>
+                    <nav class="progress-container">
+                        <nav id="progressbar"></nav>
+                    </nav>
+                </div>
+            </nav>
             <section class="content white-section" onscroll="UpdateProgress()">
                 {{range .Value.Chapters}}
+                <div>
                     <h2>{{.Name}}</h2>
                     {{.Content}}
+                </div>
                 {{end}}
             </section>
         </main>
@@ -46,7 +114,7 @@
         <script src="{{.ScriptPath}}pinningInfobar.js" charset="utf-8"></script>
         <script src="{{.ScriptPath}}progressbar.js" charset="utf-8"></script>
         {{range .Value.AttachedScripts}}
-            <link rel="stylesheet" href="{{.}}">
+            <script src="{{.}}"></script>
         {{end}}
     </body>
 </html>

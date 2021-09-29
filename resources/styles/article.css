@@ -3,80 +3,133 @@
     --Gray: hsl(0, 0%, 60%);
 }
 
+.caps {
+    font-size: 0.8em;
+    margin: 0.8em 0;
+    text-transform: uppercase;
+}
+
 body {
     color: var(--White);
     background-color: var(--Carbon);
     position: relative;
 }
 
+#navbar {
+    background-color: var(--DarkCarbon);
+    box-shadow: 0 0 1em var(--Carbon);
+    height: 2.5em;
+    display: flex;
+    width: 100%;
+    color: var(--Gray);
+}
+
 header {
+    padding: 1em;
+    min-height: 30vw;
+    width: calc(100% - 2em);
+    display: flex;
+    align-content: center;
+    align-items: center;
+    text-align: left;
+    position: sticky;
+    top: 0;
     overflow: hidden;
-    position: fixed;
+}
+header .bg {
+    position: absolute;
+    top: 0;
+    left: calc(50% - 1em);
+    margin: 1em;
+    width: calc(100% - 2em);
+    transform: translateX(-50%);
+    opacity: 0.85;
+    /*filter: blur(0.3em) brightness(70%);*/
+    z-index: -1;
+}
+header .bg::after{
+    content: ' ';
+    position: absolute;
     top: 0;
     left: 0;
-    z-index: -1;
-    display: flex;
-    justify-content: center;
-    margin: 1em;
-    margin-right: 2em;
+    width: 100%;
+    height: 100%;
+    -webkit-box-shadow: inset 0 0 1em 1em var(--Carbon);
+    -moz-box-shadow: inset 0 0 1em 1em var(--Carbon);
+    box-shadow: inset 0 0 1em 1em var(--Carbon);
+    overflow: hidden;
 }
-header .cover {
+
+#suggested {
+    background: var(--FullGradient);
+    display: inline-block;
+    max-width: 35vw;
+    width: max-content;
+    border-radius: 1.5em;
+    overflow: hidden;
+    text-align: center;
+    color: var(--White);
+    margin: 1em;
+}
+#suggested > h3 {
+    margin: 0.8em 0;
+}
+#suggested > nav {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+    border: 5px solid var(--Carbon);
+    background-color: var(-Carbon);
+    margin: 0.5em;
+    margin-top: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 1em;
+    max-height: 15em;
+}
+
+.cover {
+    width: 20em;
+    display: flex;
+}
+.cover img {
     width: 100%;
     border-radius: 1em;
 }
 
 #index {
-    margin-top: 0.3em;
+    width: max-content;
+    border: 0.5em solid var(--Carbon);
+    background-color: var(--DarkCarbon);
+    color: var(--Gray);
+    border-radius: 1em 0 0 1em;
+    margin-left: auto;
+    padding: 0.5em;
+}
+#index h3 {
+    text-align: center;
+    margin: 0;
 }
 #index .details {
-    max-height: 0;
-    padding: 0 2em;
-    margin: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: opacity 0.5s, max-height 0.5s ease-in-out;
+    padding: 0 0 0 2ch;
+    margin: 0.5em 0 0 0;
 }
 #index .details a {
+    cursor: pointer;
     color: inherit;
     text-decoration: none;
 }
 
-#index em {
-    font-style: normal;
-    display: inline-block;
-    cursor: pointer;
-    border-radius: 0.3em;
-    padding: 0.1em 0.2em;
-    background-color: hsla(0, 0%, 50%, 0.5);
-    transition: background-color 0.5s;
-}
-#index em::before {
-    content: "►";
-    font-size: 0.8em;
-    display: inline-block;
-    margin: 0.2em 0.5ch;
-    font-weight: bold;
-    transform: rotate(0);
-    transition: transform 0.5s;
-}
-#index em:hover {
-    background-color: hsla(260, 20%, 50%, 0.5);
-}
-#index.expanded em {
-    background-color: hsla(290, 20%, 50%, 0.5);
-}
-#index.expanded .details{
-    max-height: 10em;
-    opacity: 1;
-}
-#index.expanded em::before {
-    transform: rotate(90deg);
+main {
+    margin-top: -3em;
+    position: sticky;
 }
 
 #infobar {
     position: sticky;
     top: -0.1em;
-    margin: 2em;
+    margin: -100% 1em 0 calc(35vw + 3em);
     z-index: 1;
     min-width: 16em;
     opacity: 0.75;
@@ -86,19 +139,81 @@ header .cover {
 #infobar:hover {
     opacity: 1;
 }
+#infobar.is-pinned {
+    opacity: 1;
+	margin: 0;
+    margin-top: -100%;
+    border-radius: 0 0 0.5em 0.5em;
+    min-width: 100%;
+}
 #infobar h1 {
+    display: inline-block;
     font-size: 1.25em;
     padding: 0;
+    margin: 0.8rem;
 }
 #infobar div {
     margin: 0.5em;
 }
 
-#infobar.is-pinned {
+#shareBtn {
+    cursor: pointer;
+    float: right;
+    margin: 0.8rem 0.5em;
+    position: relative;
+    border-radius: 0.3em;
+    border: var(--Gray) solid 1px;
+    display: flex;
+}
+#shareBtn:hover div {
+    max-width: 10em;
+}
+#shareBtn div i {
+    padding-right: 1ch;
+    font-size: inherit;
+}
+#shareBtn div span {
+    display: block;
+    width: max-content;
+}
+#shareBtn div {
+    transition: max-width 1s;
+    max-width: 2ch;
+    overflow: hidden;
+    display: inline-block;
+    width: max-content;
+    margin: 0;
+}
+#shareBtn .tooltip {
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: block;
+    width: max-content;
+    color: var(--Gray);
+    background-color: var(--DarkCarbon);
+    padding: 0.1em 0.3em;
+    border-radius: 0.3em;
+
+    z-index: -1;
+    bottom: 0; /* 2.5em */
+    opacity: 0; /* 1 */
+    transition: bottom 0.5s, opacity 0.5s;
+}
+#shareBtn .tooltip.opened {
+    bottom: 2.5em;
     opacity: 1;
-	margin: 0;
-    border-radius: 0 0 0.5em 0.5em;
-    min-width: 100%;
+}
+#shareBtn .tooltip::before {
+    content: "";
+    position: absolute;
+    top: 95%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--DarkCarbon) transparent transparent transparent;
 }
 
 .progress-container {
@@ -136,27 +251,29 @@ header .cover {
 }
 
 .content {
+    box-shadow: var(--DarkCarbon) 0 0 1em;
     margin: 1em;
     padding: 1em;
 }
 
 #footer {
-    position: static;
+    position: sticky;
     background-color: var(--DarkCarbon);
     color: gray;
-    height: 5em;
+    display: inline-block;
+    z-index: -1;
 }
 
 .curve {
     position: absolute;
-    top: -75vh;
-    right: -10em;
+    top: -80vh;
+    left: -25%;
     width: 600px;
     height: 600px;
     border-radius: 100% 90% 80% 90%;
     border: 5px solid var(--Blue);
     -webkit-box-shadow: -5px 5px 0 0 var(--Magenta);
-    z-index: -2;
+    z-index: -1;
     opacity: 0.5;
     animation: live-wave 6s linear infinite;
 }
@@ -166,14 +283,28 @@ header .cover {
     100% {transform: rotate(360deg); top: -75vh; border-color: var(--Blue); }
 }
 
-@media (orientation: landscape) {
+
+@media (prefers-reduced-motion), (update: none), (max-width: 900px) {
+    .animated, #suggested, #index {
+        display: none;
+    }
+
     header {
-        position: absolute;
-        width: 50%;
+        padding: 0;
+        width: 100%;
+        overflow: visible;
+    }
+    header .bg {
+        margin: 0;
+        width: 100%;
+        left: 50%;
     }
 
     #infobar {
-        max-width: 60%;
-        margin-left: 40%;
+        margin: 0 2em;
+        min-width: calc(100% - 4em);
+    }
+    #shareBtn div {
+        max-width: 10em;
     }
 }
