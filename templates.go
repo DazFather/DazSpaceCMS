@@ -12,10 +12,7 @@ type Data struct {
 	Value                  interface{}
 }
 
-var (
-	SavedTemplates  *template.Template
-	TEMPLATE_FOLDER = path.Join(RESOURCE_DIR, "templates")
-)
+var SavedTemplates *template.Template
 
 func LoadTemplates(folderPath string) error {
 	var (

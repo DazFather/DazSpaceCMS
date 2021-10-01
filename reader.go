@@ -14,12 +14,6 @@ import (
 	"github.com/russross/blackfriday/v2"
 )
 
-var (
-	BLOG_FOLDER    = path.Join("contents", "blog")
-	ARTICLE_FOLDER = path.Join("contents", "articles")
-	BACKUPS_FOLDER = path.Join("contents", "backups")
-)
-
 func parse(text string) (parsed string) {
 	var content = blackfriday.Run([]byte(text))
 

@@ -37,15 +37,7 @@ type Snippet struct {
 	Link     string
 }
 
-const RESOURCE_DIR = "resources"
-
-var (
-	Cache = make(map[string]*Article)
-
-	IMAGES_FOLDER  = path.Join(RESOURCE_DIR, "imgs")
-	STYLES_FOLDER  = path.Join(RESOURCE_DIR, "styles")
-	SCRIPTS_FOLDER = path.Join(RESOURCE_DIR, "scripts")
-)
+var Cache = make(map[string]*Article)
 
 func SelectFromChache(snip string) (art *Article) {
 	return Cache[snip]

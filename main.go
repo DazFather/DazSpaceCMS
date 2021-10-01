@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -11,9 +10,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 )
 
-var (
-	ResourcesPath = "/" + RESOURCE_DIR + "/"
-)
+var ResourcesPath = "/" + RESOURCE_DIR + "/"
 
 func check(funcName string, err error) {
 	if err != nil {
@@ -76,46 +73,21 @@ func HandlerBlog(w http.ResponseWriter, r *http.Request) {
 	w.Write(content)
 }
 
-type EventAction func(fsnotify.Op, string) error
+// Load template and create missing folders
+func InitializeServer() {
+	// Loads all settings and paths
+	LoadSettings()
 
-func Detect(PathToWath string, action EventAction) (err error) {
-	var watch *fsnotify.Watcher
+	// Load all templates from folders
+	LoadTemplates(TEMPLATE_FOLDER)
 
-	watch, err = fsnotify.NewWatcher()
-	if err != nil {
-		log.Println("Detect", err)
-		return
-	}
-	defer watch.Close()
-
-	err = watch.Add(PathToWath)
-	if err != nil {
-		return
-	}
-
-	for {
-		select {
-		case event, ok := <-watch.Events:
-			if !ok {
-				return errors.New("Internal error meanwhile watching events")
-			}
-			// TODO: better managment of chache and handling deleting of articles
-			if e := action(event.Op, event.Name); e != nil {
-				log.Println("Detect", e)
-			}
-
-		case e, ok := <-watch.Errors:
-			if !ok {
-				return errors.New("Internal error meanwhile watching errors")
-			}
-			return e
-		}
-	}
+	// Recreate missing folders
+	check("HealDirectories", HealDirectories())
 }
 
 func main() {
-	// Load all templates from folder
-	LoadTemplates(TEMPLATE_FOLDER)
+	// Initialize server loading templates
+	InitializeServer()
 
 	// Manage changes in the articles (new / edited / deleted)
 	go Detect(ARTICLE_FOLDER, ManageContents)
