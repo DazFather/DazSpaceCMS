@@ -6,11 +6,9 @@ import (
 	"html/template"
 	"log"
 	"os"
-	"path"
 	"regexp"
 	"strings"
 
-	"github.com/fsnotify/fsnotify"
 	"github.com/russross/blackfriday/v2"
 )
 
@@ -137,63 +135,5 @@ func ReadArticle(filename string) (art *Article, err error) {
 
 	// Saving and return
 	art = &newArt
-	return
-}
-
-// It manage the incoming events on the article folder
-var ManageContents EventAction = func(eventType fsnotify.Op, filePath string) (err error) {
-	var article *Article
-
-	if eventType&fsnotify.Write != fsnotify.Write {
-		// If article is deleted then move the html file into BACKUPS_FOLDER and delte from cache
-		if eventType&fsnotify.Remove == fsnotify.Remove {
-			fileName := strings.TrimSuffix(path.Base(strings.ReplaceAll(filePath, "\\", "/")), path.Ext(filePath))
-			os.Rename(path.Join(BLOG_FOLDER, fileName+".html"), path.Join(BACKUPS_FOLDER, fileName+".html"))
-			RemoveFromCache(fileName)
-		}
-		return
-	}
-
-	// Parsing the article
-	article, err = ReadArticle(filePath)
-	if err != nil {
-		return
-	}
-
-	// Renaming the article with his unique identifier
-	fileName := strings.TrimSuffix(path.Base(strings.ReplaceAll(filePath, "\\", "/")), path.Ext(filePath))
-	if _, e := os.Stat(path.Join(BLOG_FOLDER, fileName+".html")); os.IsNotExist(e) {
-		article.Sign("DazFather", "", false)
-
-		err = os.Rename(filePath, path.Join(ARTICLE_FOLDER, article.RelativeLink+".md"))
-		if err != nil {
-			return
-		}
-		// If article have already the identifier as name, just update the signature
-	} else {
-		// We can't use Sign or else a new identifier will be generated
-		article.Date = strings.Join(strings.Split(fileName, "-")[1:4], " ")
-		article.Author = "DazFather"
-		article.AuthorLink = ""
-		// As RelativeLink (identifier) we put its own fileName without extentions
-		article.RelativeLink = fileName
-	}
-
-	// Generate HTML file
-	err = article.SaveAsHTML(BLOG_FOLDER, "article.tmpl")
-	if err != nil {
-		return
-	}
-
-	// Save into chache
-	_, err = article.SaveIntoCache()
-
-	return
-}
-
-var UpdateTemplates EventAction = func(eventType fsnotify.Op, filePath string) (err error) {
-	if eventType&fsnotify.Write == fsnotify.Write || eventType&fsnotify.Remove == fsnotify.Remove {
-		LoadTemplates(path.Dir(strings.ReplaceAll(filePath, "\\", "/")))
-	}
 	return
 }

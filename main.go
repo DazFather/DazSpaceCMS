@@ -6,8 +6,6 @@ import (
 	"os"
 	"path"
 	"strings"
-
-	"github.com/fsnotify/fsnotify"
 )
 
 var ResourcesPath = "/" + RESOURCE_DIR + "/"
