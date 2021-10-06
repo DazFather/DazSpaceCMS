@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
@@ -35,12 +36,18 @@ type Snippet struct {
 	Abstract string
 	Cover    string
 	Link     string
+	Date     time.Time
 }
 
-var Cache = make(map[string]*Article)
+type Savings struct {
+	SavedArticles map[string]*Article
+	SavedSnippets map[string]*Snippet
+}
+
+var Cache = Savings{SavedArticles: make(map[string]*Article), SavedSnippets: make(map[string]*Snippet)}
 
 func SelectFromChache(snip string) (art *Article) {
-	return Cache[snip]
+	return Cache.SavedArticles[snip]
 }
 
 func (a *Article) SaveIntoCache() (link string, err error) {
@@ -49,14 +56,28 @@ func (a *Article) SaveIntoCache() (link string, err error) {
 		err = errors.New("Missing relative link")
 		return
 	}
-	Cache[link] = a
+	Cache.SavedArticles[link] = a
+	// Saving articles's snippet too
+	snippet := a.Extract()
+	snippet.SaveIntoCache()
+	return
+}
+func (s *Snippet) SaveIntoCache() (link string, err error) {
+	link = s.Link
+	if link == "" {
+		err = errors.New("Missing relative link")
+		return
+	}
+	Cache.SavedSnippets[link] = s
 
 	return
 }
 
-func RemoveFromCache(snip string) (art *Article) {
-	art = Cache[snip]
-	delete(Cache, snip)
+func RemoveFromCache(link string) (art *Article) {
+	art = Cache.SavedArticles[link]
+	delete(Cache.SavedArticles, link)
+	// Deleting articles's snippet too
+	delete(Cache.SavedSnippets, link)
 	return
 }
 
@@ -85,8 +106,8 @@ func (a *Article) GenLink() string {
 	)
 
 	a.RelativeLink = title
-	for Cache[a.RelativeLink] != nil {
-		a.RelativeLink = fmt.Sprint(title, "-", i)
+	for SelectFromChache(a.RelativeLink) != nil {
+		a.RelativeLink = fmt.Sprint(title, "-v", i)
 		i++
 	}
 	return a.RelativeLink
@@ -147,12 +168,106 @@ func (a *Article) Extract() Snippet {
 	}
 }
 
-func GenLastArticles() (Collection []Snippet) {
-	for _, article := range Cache {
-		if !article.Unlisted {
-			Collection = append(Collection, article.Extract())
+func extractDate(identifier string) (date time.Time, err error) {
+	const dateform = "2006-January-2"
+	var (
+		re         = regexp.MustCompile(`2[0-9]{3}-[a-zA-Z]+-\d{1,2}(-v\d+)?$`)
+		stringDate = re.FindString(identifier)
+	)
+
+	if ind := strings.Index(stringDate, "-v"); ind != -1 {
+		stringDate = stringDate[:ind]
+	}
+
+	return time.Parse(dateform, stringDate)
+}
+
+func extractTitle(identifier string) (title string) {
+	var re = regexp.MustCompile(`2[0-9]{3}-[a-zA-Z]+-\d{1,2}(-v\d+)?$`)
+
+	indexes := re.FindStringIndex(identifier)
+	if indexes == nil {
+		return
+	}
+
+	title, _ = url.QueryUnescape(identifier[:indexes[0]])
+	return
+}
+
+func GenLastArticles(cap uint) (Collection []Snippet) {
+	var CurrentDate = time.Now()
+
+	// Reading the directory to grab the names of the asrticles
+	var files, err = os.ReadDir(BLOG_FOLDER)
+	if err != nil {
+		return
+	}
+
+	// Genereting and selecting an ordered array of raw (with just Date and Link) Snippets
+	for _, file := range files {
+		// Extract the identifier and the date of the Snippet from the file.Name()
+		link := strings.TrimSuffix(path.Base(file.Name()), filepath.Ext(file.Name()))
+		date, _ := extractDate(link)
+		var newSnippet = Snippet{Link: link, Date: date}
+		// Check if the article is old less then 1 year (approx.)
+		if CurrentDate.Sub(date).Hours()/24 < 365 {
+			// Add it to the Collection
+			Collection = insert(newSnippet, Collection)
+			// If the array is too big cut the last snippet out
+			if len(Collection) >= int(cap) {
+				Collection = Collection[:cap]
+			}
 		}
 	}
 
+	// Grab the rest of the infos (Title, Cover, Abstract) for each snippet in the collection
+	for _, rawSnippet := range Collection {
+		// Check if is on cache
+		if art := SelectFromChache(rawSnippet.Link); art != nil {
+			rawSnippet = art.Extract()
+
+			rawSnippet.SaveIntoCache()
+			continue
+		}
+
+		// Parse the original article
+		art, err := ReadArticle(path.Join(ARTICLE_FOLDER, rawSnippet.Link+".md"))
+		if err != nil {
+			rawSnippet.Title = extractTitle(rawSnippet.Link)
+			rawSnippet.Abstract = "Preview not avaiable for this article"
+
+			rawSnippet.SaveIntoCache()
+			continue
+		}
+		// Cannot use art.Sign(...) because it will generate a new link
+		art.Date = fmt.Sprint(rawSnippet.Date.Date())
+		art.Author = "DazFather"
+		art.AuthorLink = ""
+		art.RelativeLink = rawSnippet.Link
+
+		// Save it on cache
+		art.SaveIntoCache()
+	}
+
+
+	return
+}
+
+func insert(newValue Snippet, Collection []Snippet) (newCollection []Snippet) {
+	var (
+		last = len(Collection) - 1
+		i    = last
+	)
+
+	for i >= 0 && newValue.Date.Before(Collection[i].Date) {
+		i--
+	}
+
+	if i == last {
+		return append(Collection, newValue)
+	}
+	i++
+	newCollection = append(Collection[:i+1], Collection[i:]...)
+	newCollection[i] = newValue
 	return
 }
