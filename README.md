@@ -9,6 +9,7 @@ Server and CMS that will soon host my blog. **Still Work In Progress**
 - Easy support for most of CSS frameworks like Sass
 - Live changes when you edit your markdown articles
 - Automatic backup of the html file when you delete the original markdown article
-- Atuomatic generation a SEO-friendly links for each article based on title + date
+- Automatic generation a SEO-friendly links for each article based on title + date
 - No collision for articles with the same title
 - Live changes for any resources (CSS or JS sheets, images or HTML templates)
+- Ability to change settings like the path of the contents and resources directories

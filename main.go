@@ -23,7 +23,7 @@ var HandlerResources = http.StripPrefix(ResourcesPath,
 
 // Handle the homepage (.../ or .../index.html)
 func HandlerHome(w http.ResponseWriter, r *http.Request) {
-	err := Compose(w, "home.tmpl", Cache.SavedSnippets)
+	err := Compose(w, "home.tmpl", Cache.GetSnippets())
 	check("HandlerHome", err)
 }
 
@@ -82,7 +82,7 @@ func InitializeServer() {
 	// Recreate missing folders
 	check("HealDirectories", HealDirectories())
 
-	GenLastArticles(10)
+	GenLastArticles()
 }
 
 func main() {

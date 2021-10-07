@@ -39,48 +39,6 @@ type Snippet struct {
 	Date     time.Time
 }
 
-type Savings struct {
-	SavedArticles map[string]*Article
-	SavedSnippets map[string]*Snippet
-}
-
-var Cache = Savings{SavedArticles: make(map[string]*Article), SavedSnippets: make(map[string]*Snippet)}
-
-func SelectFromChache(snip string) (art *Article) {
-	return Cache.SavedArticles[snip]
-}
-
-func (a *Article) SaveIntoCache() (link string, err error) {
-	link = a.RelativeLink
-	if link == "" {
-		err = errors.New("Missing relative link")
-		return
-	}
-	Cache.SavedArticles[link] = a
-	// Saving articles's snippet too
-	snippet := a.Extract()
-	snippet.SaveIntoCache()
-	return
-}
-func (s *Snippet) SaveIntoCache() (link string, err error) {
-	link = s.Link
-	if link == "" {
-		err = errors.New("Missing relative link")
-		return
-	}
-	Cache.SavedSnippets[link] = s
-
-	return
-}
-
-func RemoveFromCache(link string) (art *Article) {
-	art = Cache.SavedArticles[link]
-	delete(Cache.SavedArticles, link)
-	// Deleting articles's snippet too
-	delete(Cache.SavedSnippets, link)
-	return
-}
-
 func (art *Article) SaveAsHTML(folderPath, templateName string) error {
 	if art.RelativeLink == "" {
 		return errors.New("Missing RelativeLink")
@@ -93,6 +51,18 @@ func (art *Article) SaveAsHTML(folderPath, templateName string) error {
 	}
 
 	return Compose(file, templateName, art)
+}
+
+func SelectFromChache(snip string) (art *Article) {
+	return Cache.SavedArticles[snip]
+}
+
+func (a *Article) SaveIntoCache() (link string, err error) {
+	return Cache.Save(a)
+}
+
+func RemoveFromCache(link string) (art *Article) {
+	return Cache.Remove(link)
 }
 
 func (a *Article) GenLink() string {
@@ -183,7 +153,7 @@ func extractDate(identifier string) (date time.Time, err error) {
 }
 
 func extractTitle(identifier string) (title string) {
-	var re = regexp.MustCompile(`2[0-9]{3}-[a-zA-Z]+-\d{1,2}(-v\d+)?$`)
+	var re = regexp.MustCompile(`-2[0-9]{3}-[a-zA-Z]+-\d{1,2}(-v\d+)?$`)
 
 	indexes := re.FindStringIndex(identifier)
 	if indexes == nil {
@@ -194,7 +164,8 @@ func extractTitle(identifier string) (title string) {
 	return
 }
 
-func GenLastArticles(cap uint) (Collection []Snippet) {
+// TODO: rework this function with the new cache system
+func GenLastArticles() (Collection []Snippet) {
 	var CurrentDate = time.Now()
 
 	// Reading the directory to grab the names of the asrticles
@@ -214,8 +185,8 @@ func GenLastArticles(cap uint) (Collection []Snippet) {
 			// Add it to the Collection
 			Collection = insert(newSnippet, Collection)
 			// If the array is too big cut the last snippet out
-			if len(Collection) >= int(cap) {
-				Collection = Collection[:cap]
+			if len(Collection) >= MEMORY_CAP {
+				Collection = Collection[:MEMORY_CAP]
 			}
 		}
 	}
@@ -223,20 +194,14 @@ func GenLastArticles(cap uint) (Collection []Snippet) {
 	// Grab the rest of the infos (Title, Cover, Abstract) for each snippet in the collection
 	for _, rawSnippet := range Collection {
 		// Check if is on cache
-		if art := SelectFromChache(rawSnippet.Link); art != nil {
-			rawSnippet = art.Extract()
-
-			rawSnippet.SaveIntoCache()
+		if Cache.SavedSnippets[rawSnippet.Link] != nil {
 			continue
 		}
 
 		// Parse the original article
 		art, err := ReadArticle(path.Join(ARTICLE_FOLDER, rawSnippet.Link+".md"))
 		if err != nil {
-			rawSnippet.Title = extractTitle(rawSnippet.Link)
-			rawSnippet.Abstract = "Preview not avaiable for this article"
-
-			rawSnippet.SaveIntoCache()
+			Cache.SavePhantom(rawSnippet)
 			continue
 		}
 		// Cannot use art.Sign(...) because it will generate a new link
@@ -248,7 +213,6 @@ func GenLastArticles(cap uint) (Collection []Snippet) {
 		// Save it on cache
 		art.SaveIntoCache()
 	}
-
 
 	return
 }
@@ -269,5 +233,6 @@ func insert(newValue Snippet, Collection []Snippet) (newCollection []Snippet) {
 	i++
 	newCollection = append(Collection[:i+1], Collection[i:]...)
 	newCollection[i] = newValue
+
 	return
 }
