@@ -2,96 +2,33 @@ package main
 
 import (
 	"errors"
+	"html/template"
 	"time"
 )
 
-// TODO: make theese attributes private
+// Architecture of the Cache memory
 type Savings struct {
-	SavedArticles map[string]*Article
-	SavedSnippets map[string]*Snippet
-	Timeline      []string
+	savedArticles  map[string]*Article // Articles saved on memory
+	savedSnippets  map[string]*Snippet // Article's snippets saved on memory
+	timeline       []string            // Orderd (by date) list of links that can be used to select to articles or snippets
+	SavedTemplates *template.Template  // Html templates used on templates.go
 }
 
-type PhantomSnippet struct {
-	Link  string
-	Title string
-	Date  time.Time
-}
-
+// Max number of snippets and articles that will be saved on memory
 const MEMORY_CAP = 10
 
+// Cache memory
 var Cache = Savings{
-	SavedArticles: make(map[string]*Article),
-	SavedSnippets: make(map[string]*Snippet),
+	savedArticles: make(map[string]*Article),
+	savedSnippets: make(map[string]*Snippet),
 }
 
-func (memory *Savings) trimOldest() {
-	var (
-		max  = time.Date(0, time.September, 1, 0, 0, 0, 0, time.UTC)
-		link = ""
-	)
-
-	if len(memory.SavedSnippets) <= 0 {
-		return
-	}
-
-	for currentLink, snippet := range memory.SavedSnippets {
-		if max.Before(snippet.Date) {
-			max = snippet.Date
-			link = currentLink
-		}
-	}
-	if link == "" {
-		return
-	}
-
-	delete(memory.SavedSnippets, link)
-	delete(memory.SavedArticles, link)
-	memory.deleteFromTimeline(link)
+// Get the number of links saved on cache
+func (memory *Savings) Len() int {
+	return len(memory.timeline)
 }
 
-func (memory *Savings) deleteFromTimeline(link string) (deleted bool) {
-	// TODO: Upgrade speed using a bisection search (?)
-	for i, current := range memory.Timeline {
-		if current == link {
-			memory.Timeline = append(memory.Timeline[:i], memory.Timeline[i+i:]...)
-			deleted = true
-			break
-		}
-	}
-
-	return
-}
-
-func (memory *Savings) addToTimeline(link string, date time.Time) {
-	var (
-		last = memory.len() - 1
-		ind  = last
-	)
-
-	for _, current := range memory.Timeline {
-		if current == link {
-			return
-		}
-		if ind >= 0 && date.Before(memory.SavedSnippets[memory.Timeline[ind]].Date) {
-			ind--
-		}
-	}
-
-	if ind == last {
-		memory.Timeline = append(memory.Timeline, link)
-		return
-	}
-	ind++
-
-	memory.Timeline = append(memory.Timeline[:ind+1], memory.Timeline[ind:]...)
-	memory.Timeline[ind] = link
-}
-
-func (memory *Savings) len() int {
-	return len(memory.Timeline)
-}
-
+// Save an article (and relative snippet) in the memory
 func (memory *Savings) Save(a *Article) (link string, err error) {
 	link = a.RelativeLink
 	if link == "" {
@@ -99,18 +36,22 @@ func (memory *Savings) Save(a *Article) (link string, err error) {
 		return
 	}
 
-	for memory.len() >= MEMORY_CAP {
+	for memory.Len() >= MEMORY_CAP {
 		memory.trimOldest()
 	}
 
 	snippet := a.Extract()
-	memory.SavedArticles[link] = a
-	memory.SavedSnippets[link] = &snippet
-	memory.addToTimeline(link, snippet.Date)
+	memory.savedArticles[link] = a
+	memory.savedSnippets[link] = &snippet
+	memory.addTotimeline(link, snippet.Date)
 
 	return
 }
 
+/* Save a phantom snippet in the memory
+ * phantom snippet are Snippet that are related to an article that is no longer
+ * avaiable as markdown but it still exist as html file
+ */
 func (memory *Savings) SavePhantom(s Snippet) (link string, err error) {
 	s.Abstract = "Preview not avaiable for this article"
 	s.Title = extractTitle(s.Link)
@@ -120,33 +61,112 @@ func (memory *Savings) SavePhantom(s Snippet) (link string, err error) {
 		return
 	}
 
-	for memory.len() >= MEMORY_CAP {
+	for memory.Len() >= MEMORY_CAP {
 		memory.trimOldest()
 	}
 
-	memory.SavedSnippets[link] = &s
-	memory.addToTimeline(link, s.Date)
+	memory.savedSnippets[link] = &s
+	memory.addTotimeline(link, s.Date)
 
 	return
 }
 
+// Remove an article (and relative snippet) from the memory and return it
 func (memory *Savings) Remove(link string) (art *Article) {
-	art = Cache.SavedArticles[link]
+	art = memory.savedArticles[link]
 
-	delete(memory.SavedArticles, link)
-	delete(memory.SavedSnippets, link)
-	memory.deleteFromTimeline(link)
-
+	delete(memory.savedArticles, link)
+	delete(memory.savedSnippets, link)
+	memory.deleteFromtimeline(link)
 	return
 }
 
-func (memory *Savings) GetSnippets() (Collection []Snippet) {
-	if memory.len() <= 0 {
+// Return an article form the memory, nil if there is not
+func (memory *Savings) SelectArticle(link string) *Article {
+	return memory.savedArticles[link]
+}
+
+// Return an snippet form the memory, nil if there is not
+func (memory *Savings) SelectSnippet(link string) *Snippet {
+	return memory.savedSnippets[link]
+}
+
+// Return the oldest article/snippet link
+func (memory *Savings) Oldest() string {
+	if memory.Len() <= 0 {
+		return ""
+	}
+	return memory.timeline[0]
+}
+
+// Return the youngest article/snippet link
+func (memory *Savings) Youngest() string {
+	if memory.Len() <= 0 {
+		return ""
+	}
+	return memory.timeline[memory.Len()-1]
+}
+
+/* Generate an orderd (by date) collection of snippets that are saved in memory
+ * The number of them, is memory.Len() and it can be as max MEMORY_CAP
+ */
+func (memory *Savings) GenSnippets() (Collection []Snippet) {
+	if memory.Len() <= 0 {
 		return
 	}
 
-	for _, identifier := range memory.Timeline {
-		Collection = append(Collection, *memory.SavedSnippets[identifier])
+	for _, identifier := range memory.timeline {
+		Collection = append(Collection, *memory.savedSnippets[identifier])
 	}
 	return
+}
+
+// Remove the oldest article and snippet form the memory
+func (memory *Savings) trimOldest() {
+	var link = memory.Oldest()
+
+	if link == "" {
+		return
+	}
+
+	delete(memory.savedSnippets, link)
+	delete(memory.savedArticles, link)
+	memory.timeline = memory.timeline[:memory.Len()-1]
+}
+
+// Delete a link to article and snippet from the timeline
+func (memory *Savings) deleteFromtimeline(link string) (deleted bool) {
+	// TODO: Upgrade speed using a bisection search (?)
+	for i, current := range memory.timeline {
+		if current == link {
+			memory.timeline = append(memory.timeline[:i], memory.timeline[i+i:]...)
+			deleted = true
+			break
+		}
+	}
+
+	return
+}
+
+// Add a link to article and snippet to the timeline
+func (memory *Savings) addTotimeline(link string, date time.Time) {
+	var ind int
+
+	for i, current := range memory.timeline {
+		if current == link {
+			return
+		}
+		if date.After(memory.SelectSnippet(memory.timeline[i]).Date) {
+			ind = i
+			break
+		}
+	}
+
+	if ind == 0 {
+		memory.timeline = append([]string{link}, memory.timeline...)
+		return
+	}
+
+	memory.timeline = append(memory.timeline[:ind+1], memory.timeline[ind:]...)
+	memory.timeline[ind] = link
 }

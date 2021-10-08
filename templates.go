@@ -12,8 +12,6 @@ type Data struct {
 	Value                  interface{}
 }
 
-var SavedTemplates *template.Template
-
 func LoadTemplates(folderPath string) error {
 	var (
 		names      []string
@@ -27,7 +25,7 @@ func LoadTemplates(folderPath string) error {
 		names = append(names, path.Join(folderPath, file.Name()))
 	}
 
-	SavedTemplates = template.Must(template.ParseFiles(names...))
+	Cache.SavedTemplates = template.Must(template.ParseFiles(names...))
 	return nil
 }
 
@@ -40,5 +38,5 @@ func Pack(obj interface{}) Data {
 }
 
 func Compose(w io.Writer, templateName string, rawDatas interface{}) error {
-	return SavedTemplates.ExecuteTemplate(w, templateName, Pack(rawDatas))
+	return Cache.SavedTemplates.ExecuteTemplate(w, templateName, Pack(rawDatas))
 }

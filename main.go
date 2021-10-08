@@ -23,7 +23,7 @@ var HandlerResources = http.StripPrefix(ResourcesPath,
 
 // Handle the homepage (.../ or .../index.html)
 func HandlerHome(w http.ResponseWriter, r *http.Request) {
-	err := Compose(w, "home.tmpl", Cache.GetSnippets())
+	err := Compose(w, "home.tmpl", Cache.GenSnippets())
 	check("HandlerHome", err)
 }
 
@@ -50,13 +50,13 @@ func HandlerBlog(w http.ResponseWriter, r *http.Request) {
 	requested = strings.TrimSuffix(requested, ".html")
 
 	// Check if it's on cache
-	if article := SelectFromChache(requested); article != nil {
+	if article := Cache.SelectArticle(requested); article != nil {
 		err = Compose(w, "article.tmpl", article)
 		if err == nil {
 			return
 		}
-		log.Println("HandlerBlog", "SelectFromChache", err)
-		RemoveFromCache(requested)
+		log.Println("HandlerBlog", "Cache.SelectArticle", err)
+		Cache.Remove(requested)
 	}
 
 	// Check inside the contents

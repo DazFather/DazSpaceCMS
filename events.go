@@ -58,7 +58,7 @@ var ManageContents EventAction = func(eventType fsnotify.Op, filePath string) (e
 		if eventType&fsnotify.Remove == fsnotify.Remove {
 			fileName := strings.TrimSuffix(path.Base(strings.ReplaceAll(filePath, "\\", "/")), path.Ext(filePath))
 			os.Rename(path.Join(BLOG_FOLDER, fileName+".html"), path.Join(BACKUPS_FOLDER, fileName+".html"))
-			RemoveFromCache(fileName)
+			Cache.Remove(fileName)
 		}
 		return
 	}
@@ -95,7 +95,7 @@ var ManageContents EventAction = func(eventType fsnotify.Op, filePath string) (e
 	}
 
 	// Save into chache
-	_, err = article.SaveIntoCache()
+	_, err = Cache.Save(article)
 
 	return
 }

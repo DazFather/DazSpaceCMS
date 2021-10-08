@@ -53,18 +53,6 @@ func (art *Article) SaveAsHTML(folderPath, templateName string) error {
 	return Compose(file, templateName, art)
 }
 
-func SelectFromChache(snip string) (art *Article) {
-	return Cache.SavedArticles[snip]
-}
-
-func (a *Article) SaveIntoCache() (link string, err error) {
-	return Cache.Save(a)
-}
-
-func RemoveFromCache(link string) (art *Article) {
-	return Cache.Remove(link)
-}
-
 func (a *Article) GenLink() string {
 	if a.Title == "" || a.Date == "" {
 		return ""
@@ -76,7 +64,7 @@ func (a *Article) GenLink() string {
 	)
 
 	a.RelativeLink = title
-	for SelectFromChache(a.RelativeLink) != nil {
+	for Cache.SelectArticle(a.RelativeLink) != nil {
 		a.RelativeLink = fmt.Sprint(title, "-v", i)
 		i++
 	}
@@ -124,6 +112,15 @@ func (a *Article) Sign(author, link string, hidden bool) *Article {
 	return a
 }
 
+func (a *Article) Snip() Snippet {
+	sp := Cache.SelectSnippet(a.RelativeLink)
+	if sp != nil {
+		return *sp
+	}
+
+	return a.Extract()
+}
+
 func (a *Article) Extract() Snippet {
 	var (
 		htmltag = regexp.MustCompile(`<.+?>`)
@@ -164,7 +161,6 @@ func extractTitle(identifier string) (title string) {
 	return
 }
 
-// TODO: rework this function with the new cache system
 func GenLastArticles() (Collection []Snippet) {
 	var CurrentDate = time.Now()
 
@@ -194,7 +190,7 @@ func GenLastArticles() (Collection []Snippet) {
 	// Grab the rest of the infos (Title, Cover, Abstract) for each snippet in the collection
 	for _, rawSnippet := range Collection {
 		// Check if is on cache
-		if Cache.SavedSnippets[rawSnippet.Link] != nil {
+		if Cache.SelectSnippet(rawSnippet.Link) != nil {
 			continue
 		}
 
@@ -211,7 +207,7 @@ func GenLastArticles() (Collection []Snippet) {
 		art.RelativeLink = rawSnippet.Link
 
 		// Save it on cache
-		art.SaveIntoCache()
+		Cache.Save(art)
 	}
 
 	return
