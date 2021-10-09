@@ -8,7 +8,9 @@
         <!-- {{.Value.Title}} -->
         <link rel="stylesheet" href="{{.StylesPath}}main.css">
         <link rel="stylesheet" href="{{.StylesPath}}article.css">
-
+        {{range .Value.AttachedStyles}}
+            <link rel="stylesheet" href="{{.}}">
+        {{end}}
         <title>Article</title>
     </head>
     <body>

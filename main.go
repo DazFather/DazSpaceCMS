@@ -105,5 +105,6 @@ func main() {
 	http.HandleFunc("/blog/", HandlerBlog)
 
 	// Launch server
-	http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
+	check("ListenAndServe", err)
 }

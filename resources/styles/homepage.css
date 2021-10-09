@@ -255,7 +255,8 @@ main {
 
 #myArticles {
     background: var(--RedGradient);
-    max-width: 95%;
+    width: calc(95% - 4em);
+    margin: 0 2em;
 }
 
 /* ---- FOOTER ---- */

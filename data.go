@@ -68,6 +68,7 @@ func (a *Article) GenLink() string {
 		a.RelativeLink = fmt.Sprint(title, "-v", i)
 		i++
 	}
+
 	return a.RelativeLink
 }
 
@@ -95,7 +96,7 @@ func (a *Article) Clip(cover string, stylesName, scriptsName []string) *Article 
 	for i := range scriptsName {
 		dir := path.Dir(scriptsName[i])
 		if dir == "." || dir == "/" {
-			scriptsName[i] = path.Join(SCRIPTS_FOLDER, scriptsName[i])
+			scriptsName[i] = "/" + path.Join(SCRIPTS_FOLDER, scriptsName[i])
 		}
 	}
 	a.AttachedScripts = scriptsName

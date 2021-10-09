@@ -98,17 +98,16 @@ code {
 }
 
 .snippet-holder article {
+    position: relative;
+    display: block;
     font-size: 0.95em;
     max-height: 6em;
     min-height: 3em;
     overflow: hidden;
     background-color: var(--LightCarbon);
-    display: inline-flex;
     gap: 0.3em;
     border: 0.3em solid var(--LightCarbon);
     border-radius: 0.3em;
-    justify-content: center;
-    align-items: flex-start;
     text-align: left;
     transition: min-height 0.5s;
 }
@@ -121,7 +120,7 @@ code {
     height: 100%;
     min-height: inherit;
     width: auto;
-    display: block;
+    display: inline-block;
     border-radius: inherit;
 }
 
@@ -139,9 +138,11 @@ code {
 }
 
 .snippet-holder .snippet {
+    position: absolute;
     display: inline-flex;
     flex-direction: column;
-    width: 100%;
+    margin-left: 0.5em;
+    width: auto;
     height: 100%;
     color: darkgray;
     overflow: hidden;

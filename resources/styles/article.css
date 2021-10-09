@@ -63,8 +63,7 @@ header .bg::after{
 #suggested {
     background: var(--FullGradient);
     display: inline-block;
-    max-width: 35vw;
-    width: max-content;
+    width: 35vw;
     border-radius: 1.5em;
     overflow: hidden;
     text-align: center;

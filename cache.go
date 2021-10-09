@@ -156,7 +156,7 @@ func (memory *Savings) addTotimeline(link string, date time.Time) {
 		if current == link {
 			return
 		}
-		if date.After(memory.SelectSnippet(memory.timeline[i]).Date) {
+		if snip := memory.SelectSnippet(current); snip != nil && date.After(snip.Date) {
 			ind = i
 			break
 		}

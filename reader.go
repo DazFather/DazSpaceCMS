@@ -14,8 +14,6 @@ import (
 
 func parse(text string) (parsed string) {
 	var content = blackfriday.Run([]byte(text))
-
-	content = regexp.MustCompile(`\s*</?p>\s*`).ReplaceAll(content, nil)
 	return string(content)
 }
 
@@ -70,6 +68,7 @@ func ReadArticle(filename string) (art *Article, err error) {
 		isNewChapter bool
 		newArt       Article
 		nCap         = -1
+		paragraph = regexp.MustCompile(`\s*</?p>\s*`)
 	)
 
 	// Open the file creating to scan it
@@ -88,10 +87,10 @@ func ReadArticle(filename string) (art *Article, err error) {
 
 	// Scan the rest of the file
 	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
+		line := scanner.Text()
 
 		// Check if line is blank
-		if line == "" {
+		if strings.TrimSpace(line) == "" {
 			if nCap > -1 && newArt.Chapters[nCap].Content != "" {
 				newArt.Chapters[nCap].Content += "\n"
 			}
@@ -104,7 +103,7 @@ func ReadArticle(filename string) (art *Article, err error) {
 			return
 		}
 		if isNewChapter {
-			line = parse(line[2:])
+			line = paragraph.ReplaceAllString((parse(line[2:])), "")
 			newArt.Chapters = append(newArt.Chapters, Chapter{Name: line})
 			nCap++
 			continue
@@ -114,7 +113,7 @@ func ReadArticle(filename string) (art *Article, err error) {
 		if nCap == -1 {
 			return nil, errors.New("paragraph without name")
 		}
-		newArt.Chapters[nCap].Content += template.HTML(parse(line) + "\n")
+		newArt.Chapters[nCap].Content += template.HTML(line + "\n")
 	}
 
 	// Check for errors in the scanner
@@ -123,14 +122,10 @@ func ReadArticle(filename string) (art *Article, err error) {
 		return
 	}
 
-	// Refining each content
-	rgxEndln := regexp.MustCompile(`\r?\n`)
+	// Parsing each content
 	for i, current := range newArt.Chapters {
-		// Cleaning excess of '\n'
-		raw := strings.TrimSpace(string(current.Content))
-		// Dividing text in "<p>"
-		raw = rgxEndln.ReplaceAllString(raw, "</p>\n<p>")
-		newArt.Chapters[i].Content = template.HTML("<p>" + raw + "</p>")
+		parsed := parse(string(current.Content))
+		newArt.Chapters[i].Content = template.HTML("<p>" + parsed + "</p>")
 	}
 
 	// Saving and return
