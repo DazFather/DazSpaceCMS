@@ -55,6 +55,15 @@ code {
     font-weight: normal;
 }
 
+a {
+    color: var(--Blue);
+    text-decoration: none;
+    transition: color 0.5s;
+}
+a:visited {
+    color: var(--Magenta);
+}
+
 .gradient-link {
     background: var(--FirstGradient);
     -webkit-background-clip: text;

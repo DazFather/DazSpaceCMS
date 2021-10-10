@@ -100,7 +100,7 @@ header .bg::after{
 #index {
     width: max-content;
     border: 0.5em solid var(--Carbon);
-    background-color: var(--DarkCarbon);
+    background-color: var(--LightCarbon);
     color: var(--Gray);
     border-radius: 1em 0 0 1em;
     margin-left: auto;
@@ -128,10 +128,11 @@ main {
 #infobar {
     position: sticky;
     top: -0.1em;
-    margin: -100% 1em 0 calc(35vw + 3em);
+    margin: -100% 11em 0 calc(20vw + 3em);
     z-index: 1;
     min-width: 16em;
-    opacity: 0.75;
+    opacity: 0.85;
+    background-color: var(--DarkCarbon);
     box-shadow: 0 0 1em var(--DarkCarbon);
     transition: opacity 0.5s, min-width 0.5s, margin 0.5s, border-radius 1s;
 }
@@ -147,7 +148,11 @@ main {
 }
 #infobar h1 {
     display: inline-block;
-    font-size: 1.25em;
+    text-fill-color: transparent;
+    background: var(--RedGradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.5em;
     padding: 0;
     margin: 0.8rem;
 }
@@ -161,8 +166,15 @@ main {
     margin: 0.8rem 0.5em;
     position: relative;
     border-radius: 0.3em;
-    border: var(--Gray) solid 1px;
+    border: var(--Gray) solid 0px;
     display: flex;
+    background-color: var(--LightCarbon);
+    color: var(--Gray);
+    filter: brightness(145%);
+    transition: box-shadow 0.5s;
+}
+#shareBtn:hover {
+    box-shadow: var(--LightCarbon) 0 0 0.5em;
 }
 #shareBtn:hover div {
     max-width: 10em;
@@ -171,9 +183,13 @@ main {
     padding-right: 1ch;
     font-size: inherit;
 }
-#shareBtn div span {
-    display: block;
+#shareBtn div p {
+    margin: 0;
+    padding: 0;
     width: max-content;
+}
+#shareBtn div span {
+    padding-bottom: 0.2em;
 }
 #shareBtn div {
     transition: max-width 1s;
@@ -190,14 +206,14 @@ main {
     transform: translateX(-50%);
     display: block;
     width: max-content;
-    color: var(--Gray);
-    background-color: var(--DarkCarbon);
+    color: var(--DarkCarbon);
+    background-color: var(--Gray);
     padding: 0.1em 0.3em;
     border-radius: 0.3em;
 
     z-index: -1;
-    bottom: 0; /* 2.5em */
-    opacity: 0; /* 1 */
+    bottom: 0;
+    opacity: 0;
     transition: bottom 0.5s, opacity 0.5s;
 }
 #shareBtn .tooltip.opened {
@@ -212,7 +228,7 @@ main {
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: var(--DarkCarbon) transparent transparent transparent;
+    border-color: var(--Gray) transparent transparent transparent;
 }
 
 .progress-container {
@@ -224,7 +240,8 @@ main {
     margin-top: 0.5em;
     height: 0;
     transition: height 0.5s;
-    background-color: var(--Gray);
+    background-color: var(--LightCarbon);
+    filter: brightness(120%);
 }
 #progressbar {
     margin: 0;
@@ -243,8 +260,8 @@ main {
 }
 
 .white-section {
-    background-color: var(--White);
-    color: var(--DarkCarbon);
+    background-color: var(--LightCarbon);
+    color: var(--Gray);
     display: inline-block;
     border-radius: 1em;
 }
@@ -253,6 +270,26 @@ main {
     box-shadow: var(--DarkCarbon) 0 0 1em;
     margin: 1em;
     padding: 1em;
+    width: calc(100% - 4em);
+}
+
+.content h2 {
+    font-size: 1.4em;
+}
+
+.content blockquote {
+    background-color: var(--Carbon);
+    padding: 0.1px 0.5em;
+    margin: 0;
+    border-radius: 0.2em 0.2em 0.2em 0.5em;
+    border-left: 0.3em solid var(--DarkCarbon);
+    display: block;
+}
+
+.content pre {
+    /*display: inline-block;*/
+    max-width: 100%;
+    overflow: auto;
 }
 
 #footer {
@@ -303,6 +340,10 @@ main {
         margin: 0 2em;
         min-width: calc(100% - 4em);
     }
+    #infobar.is-pinned {
+        margin-top: 0;
+    }
+
     #shareBtn div {
         max-width: 10em;
     }

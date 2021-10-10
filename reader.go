@@ -68,7 +68,7 @@ func ReadArticle(filename string) (art *Article, err error) {
 		isNewChapter bool
 		newArt       Article
 		nCap         = -1
-		paragraph = regexp.MustCompile(`\s*</?p>\s*`)
+		paragraph    = regexp.MustCompile(`\s*</?p>\s*`)
 	)
 
 	// Open the file creating to scan it
