@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/fsnotify/fsnotify"
 )
@@ -72,7 +73,7 @@ var ManageContents EventAction = func(eventType fsnotify.Op, filePath string) (e
 	// Renaming the article with his unique identifier
 	fileName := strings.TrimSuffix(path.Base(strings.ReplaceAll(filePath, "\\", "/")), path.Ext(filePath))
 	if _, e := os.Stat(path.Join(BLOG_FOLDER, fileName+".html")); os.IsNotExist(e) {
-		article.Sign("DazFather", "", false)
+		article.Sign("DazFather", "", "", false, nil)
 
 		err = os.Rename(filePath, path.Join(ARTICLE_FOLDER, article.RelativeLink+".md"))
 		if err != nil {
@@ -80,12 +81,15 @@ var ManageContents EventAction = func(eventType fsnotify.Op, filePath string) (e
 		}
 		// If article have already the identifier as name, just update the signature
 	} else {
-		// We can't use Sign or else a new identifier will be generated
-		article.Date = strings.Join(strings.Split(fileName, "-")[1:4], " ")
-		article.Author = "DazFather"
-		article.AuthorLink = ""
-		// As RelativeLink (identifier) we put its own fileName without extentions
-		article.RelativeLink = fileName
+		// extract the original date
+		var date time.Time
+		date, err = extractDate(fileName)
+		if err != nil {
+			return
+		}
+
+		// Sign but without generate a new identifier and set up the date to the original
+		article.Sign("DazFather", "", fileName, false, &date)
 	}
 
 	// Generate HTML file

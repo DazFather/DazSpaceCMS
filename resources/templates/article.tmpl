@@ -1,17 +1,46 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
     <head>
+        <title>DazSpace | {{.Value.Title}}</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- SEO -->
+        <meta name="description" content="{{.Value.Description}}">
+        <meta name="robots" content="index,follow">
+        <meta name="revised" content="Monday, Oct 11th, 2021, 7:15 pm">
+        <meta name="abstract" content="{{.Value.Description}}">
+        <meta name="topic" content="Software development">
+        <meta name="summary" content="{{.Value.Description}}">
+        <meta name="author" content="{{.Value.Author}}, {{.Value.Author}}">
+        <meta name="designer" content="Davide Lavermicocca, dlavermicocca99.uni@gmail.com">
+        <meta name="owner" content="Davide Lavermicocca, dlavermicocca99.uni@gmail.com">
+        <meta name="url" content="http://DazSpace.codes/blog/{{.Value.RelativeLink}}">
+        <meta name="identifier-URL" content="http://DazSpace.codes/blog/{{.Value.RelativeLink}}">
+        <meta name="pagename" content="DazSpace | {{.Value.Title}}">
+        <meta name="coverage" content="Worldwide">
+        <meta name="distribution" content="Global">
+        <meta name="rating" content="general">
+        <meta name="date" content="Oct. 9, 2021">
+        <meta name="search_date" content="2021-10-9">
+        <meta name="medium" content="blog">
+        <!-- Beautify link -->
+        <meta property="og:type" content="website">
+        <meta property="og:image" content="{{.Value.AttachedCover}}">
+        <meta property="og:title" content="{{.Value.Title}}">
+        <meta property="og:description" content="{{.Value.Description}}">
+        <meta property="og:url" content="https://DazSpace.codes/blog/{{.Value.RelativeLink}}">
+        <meta property="og:site_name" content="DazSpace">
+        <meta property="og:updated_time" content="{{.Value.Date}}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{.Value.Title}}">
+        <meta name="twitter:description" content="{{.Value.Description}}">
+        <!-- Stylesheets -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <!-- /resources/styles/robe.css -->
-        <!-- {{.Value.Title}} -->
         <link rel="stylesheet" href="{{.StylesPath}}main.css">
         <link rel="stylesheet" href="{{.StylesPath}}article.css">
         {{range .Value.AttachedStyles}}
             <link rel="stylesheet" href="{{.}}">
         {{end}}
-        <title>Article</title>
     </head>
     <body>
         <nav id="navbar" class="flex-center">
@@ -22,44 +51,24 @@
                 <img src="{{.Value.AttachedCover}}" alt="Cover of the following article">
             </div>
             <div class="animated curve"></div>
+            {{if .Value.RelatedArticles}}
             <aside id="suggested" class="snippet-holder">
                 <h3 class="caps">Suggested</h3>
                 <nav>
-                    <article>
-                        <img class="snippet-cover" src="https://telegra.ph/file/c8ce8d9c394b7921aa80b.jpg" alt="neko girl with christmas dress on">
-                        <div class="snippet">
-                            <a class="title" href="#">Lorem ipsum</a>
-                            <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        </div>
-                    </article>
-                    <article>
-                        <div class="snippet">
-                            <strong class="title">Lorem ipsum</strong>
-                            <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        </div>
-                    </article>
-                    <article>
-                        <div class="snippet">
-                            <strong class="title">Lorem ipsum</strong>
-                            <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        </div>
-                    </article>
-                    <article>
-                        <img class="snippet-cover" src="https://telegra.ph/file/a41c31e13fcbb85b8dba0.jpg" alt="neko girl with christmas dress on">
-                        <div class="snippet">
-                            <a class="title" href="#">Lorem ipsum</a>
-                            <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        </div>
-                    </article>
-                    <article>
-                        <img class="snippet-cover" src="https://telegra.ph/file/a41c31e13fcbb85b8dba0.jpg" alt="neko girl with christmas dress on">
-                        <div class="snippet">
-                            <a class="title" href="#">Lorem ipsum</a>
-                            <p> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        </div>
-                    </article>
+                    {{range .Value.RelatedArticles}}
+                        <article>
+                            {{if .Cover}}
+                            <img class="snippet-cover" src="{{.Cover}}" alt="Cover of the article: {{.Title}}">
+                            {{end}}
+                            <div class="snippet">
+                                <a class="title" href="/blog/{{.Link}}">{{.Title}}</a>
+                                <p>{{.Abstract}}</p>
+                            </div>
+                        </article>
+                    {{end}}
                 </nav>
             </aside>
+            {{end}}
             <aside id="index" class="white-section">
                 <h3 onclick="this.parentElement.classList.toggle('expanded')" class="caps">Chapters</h3>
                 <ul class="details">

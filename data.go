@@ -28,6 +28,8 @@ type Article struct {
 	AttachedCover   string
 	AttachedScripts []string
 	AttachedStyles  []string
+	Description     string
+	RelatedArticles []Snippet
 	Unlisted        bool
 }
 
@@ -104,12 +106,21 @@ func (a *Article) Clip(cover string, stylesName, scriptsName []string) *Article 
 	return a
 }
 
-func (a *Article) Sign(author, link string, hidden bool) *Article {
-	a.Date = fmt.Sprint(time.Now().Date())
+func (a *Article) Sign(author, authorLink, link string, hidden bool, date *time.Time) *Article {
+	if date == nil {
+		a.Date = fmt.Sprint(time.Now().Date())
+	} else {
+		a.Date = fmt.Sprint(date.Date())
+	}
 	a.Author = author
-	a.AuthorLink = link
+	a.AuthorLink = authorLink
 	a.Unlisted = hidden
-	a.GenLink()
+	if link == "" {
+		a.GenLink()
+	} else {
+		a.RelativeLink = link
+	}
+
 	return a
 }
 
@@ -123,14 +134,9 @@ func (a *Article) Snip() Snippet {
 }
 
 func (a *Article) Extract() Snippet {
-	var (
-		htmltag = regexp.MustCompile(`<.+?>`)
-		text    = string(a.Chapters[0].Content)
-	)
-
 	return Snippet{
 		Title:    a.Title,
-		Abstract: htmltag.ReplaceAllString(text, "") + "...",
+		Abstract: a.Description,
 		Cover:    a.AttachedCover,
 		Link:     a.RelativeLink,
 	}
@@ -202,10 +208,7 @@ func GenLastArticles() (Collection []Snippet) {
 			continue
 		}
 		// Cannot use art.Sign(...) because it will generate a new link
-		art.Date = fmt.Sprint(rawSnippet.Date.Date())
-		art.Author = "DazFather"
-		art.AuthorLink = ""
-		art.RelativeLink = rawSnippet.Link
+		art.Sign("DazFather", "", rawSnippet.Link, false, &rawSnippet.Date)
 
 		// Save it on cache
 		Cache.Save(art)

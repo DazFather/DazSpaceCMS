@@ -50,6 +50,8 @@ func scanHeader(scanner *bufio.Scanner, art *Article) (err error) {
 				scriptsName = append(scriptsName, link[1])
 			case "STYLE":
 				stylesName = append(stylesName, link[1])
+			case "DESCRIPTION":
+				art.Description = template.HTMLEscapeString(link[1])
 			}
 
 		default:
@@ -126,6 +128,19 @@ func ReadArticle(filename string) (art *Article, err error) {
 	for i, current := range newArt.Chapters {
 		parsed := parse(string(current.Content))
 		newArt.Chapters[i].Content = template.HTML("<p>" + parsed + "</p>")
+	}
+
+	// Generete a description if not present
+	if newArt.Description == "" && len(newArt.Chapters) >= 1 {
+		newArt.Description = string(newArt.Chapters[0].Content)
+		newArt.Description = template.HTMLEscapeString(
+			regexp.MustCompile(`<.+?>`).ReplaceAllString(newArt.Description, ""),
+		)
+	}
+	newArt.Description = strings.TrimSpace(newArt.Description)
+	if len(newArt.Description) > 80 {
+		ind := strings.LastIndex(newArt.Description[:80], " ")
+		newArt.Description = newArt.Description[:ind] + "..."
 	}
 
 	// Saving and return
