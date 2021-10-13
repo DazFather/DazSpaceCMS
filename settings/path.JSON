@@ -1,4 +1,4 @@
 {
-	"ContentDirectoryPath": "contents",
-	"ResourceDirectoryPath": "resources"
+	"content": "contents",
+	"resource": "resources"
 }

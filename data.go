@@ -34,11 +34,12 @@ type Article struct {
 }
 
 type Snippet struct {
-	Title    string
-	Abstract string
-	Cover    string
-	Link     string
-	Date     time.Time
+	Title       string
+	Description string
+	Abstract    template.HTML
+	Cover       string
+	Link        string
+	Date        time.Time
 }
 
 func (art *Article) SaveAsHTML(folderPath, templateName string) error {
@@ -134,11 +135,20 @@ func (a *Article) Snip() Snippet {
 }
 
 func (a *Article) Extract() Snippet {
+	var text string
+	if len(a.Chapters) >= 1 {
+		text = string(a.Chapters[0].Content)
+		text = regexp.MustCompile(`<.+?>`).ReplaceAllString(text, "")
+	} else {
+		text = a.Description
+	}
+
 	return Snippet{
-		Title:    a.Title,
-		Abstract: a.Description,
-		Cover:    a.AttachedCover,
-		Link:     a.RelativeLink,
+		Title:       a.Title,
+		Abstract:    template.HTML(text),
+		Description: a.Description,
+		Cover:       a.AttachedCover,
+		Link:        a.RelativeLink,
 	}
 }
 

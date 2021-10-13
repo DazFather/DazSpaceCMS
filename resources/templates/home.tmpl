@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
     <head>
-        <title>DAZ Space</title>
+        <title>{{.Site.Name}}</title>
         <meta charset="UFT-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- SEO -->
-        <meta name="description" content="Personal site of Davide Lavermicocca aka DazFather. Here you can find articles about coiding, personal opinions and other passions">
-        <meta name="keywords" content="Davide Lavermicocca, DazFather, DazSpace, Coding, Programming">
+        <meta name="description" content="{{.Site.About}}">
+        <meta name="keywords" content="{{.Site.Name}}, Davide Lavermicocca, DazFather, Coding, Programming">
         <meta name="subject" content="Coding, design and software development, personal showcase">
-        <meta name="language" content="EN">
+        <meta name="language" content="{{.Site.Language}}">
         <meta name="robots" content="index,follow">
         <meta name="revised" content="Monday, Oct 11th, 2021, 11:15 pm">
-        <meta name="abstract" content="Personal site of Davide Lavermicocca aka DazFather. Here you can find articles about coiding, personal opinions and other passions">
+        <meta name="abstract" content="{{.Site.About}}">
         <meta name="topic" content="Software development">
-        <meta name="summary" content="Personal site of Davide Lavermicocca aka DazFather. Here you can find articles about coiding, personal opinions and other passions">
-        <meta name="author" content="Davide Lavermicocca, dlavermicocca99.uni@gmail.com">
+        <meta name="summary" content="{{.Site.About}}">
+        <meta name="author" content="{{.Site.Owner}}, {{.Site.Mail}}">
         <meta name="designer" content="Davide Lavermicocca, dlavermicocca99.uni@gmail.com">
-        <meta name="reply-to" content="dlavermicocca99.uni@gmail.com">
+        <meta name="reply-to" content="{{.Site.Mail}}">
         <meta name="owner" content="Davide Lavermicocca, dlavermicocca99.uni@gmail.com">
-        <meta name="url" content="http://DazSpace.codes">
-        <meta name="identifier-URL" content="http://DazSpace.codes">
-        <meta name="pagename" content="DazSpace - DazFather coding playground">
+        <meta name="url" content="{{.Site.Domain}}">
+        <meta name="identifier-URL" content="{{.Site.Domain}}">
+        <meta name="pagename" content="{{.Site.Name}}">
         <meta name="coverage" content="Worldwide">
         <meta name="distribution" content="Global">
         <meta name="rating" content="general">
@@ -31,26 +31,20 @@
         <meta name="pageKey" content="guest-home">
         <!-- Beautify link -->
         <meta property="og:type" content="website">
-        <meta property="og:title" content="DazSpace - DazFather coding playground">
-        <meta property="og:description" content="Personal site of Davide Lavermicocca aka DazFather. Here you can find articles about coiding, personal opinions and other passions">
-        <meta property="og:url" content="https://DazSpace.codes/">
-        <meta property="og:site_name" content="DazSpace">
+        <meta property="og:title" content="{{.Site.Name}} - Home">
+        <meta property="og:description" content="{{.Site.About}}">
+        <meta property="og:url" content="{{.Site.Domain}}">
+        <meta property="og:site_name" content="{{.Site.Name}}">
         <meta property="og:updated_time" content="2021-10-11">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="DazSpace - DazFather coding playground">
-        <meta name="twitter:description" content="Personal site of Davide Lavermicocca aka DazFather. Here you can find articles about coiding, personal opinions and other passions">
+        <meta name="twitter:title" content="{{.Site.Name}} - Home">
+        <meta name="twitter:description" content="{{.Site.About}}">
         <!-- Stylesheets -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="{{.StylesPath}}main.css">
         <link rel="stylesheet" href="{{.StylesPath}}homepage.css">
     </head>
     <body>
-        <div style="display:none; overflow:hidden;">
-            <button type="button" name="button" onclick="popupOpen(hello, test)"></button>
-        </div>
-        <div id="test" style="display:none; overflow:hidden;">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        </div>
         <div class="wrapper flex-center">
             <header>
                 <div class="big-line animated curve"></div>

@@ -2,13 +2,81 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"os"
 	"path"
 )
 
-type settings struct {
-	ContentDirectoryPath  string `json:content`
-	ResourceDirectoryPath string `json:resource`
+/* The settings directory contains JSON's files that admin can use to edit
+* some server options. Edits will be applied on server reloading
+ */
+const SETTINGS_DIR = "settings"
+
+type setting interface {
+	CreateDefault() error
+	Load() error
+}
+
+func LoadSettings() (err error) {
+	var path pathSettings
+
+	err = path.Load()
+	if os.IsNotExist(err) {
+		err = path.CreateDefault()
+	}
+	if err != nil {
+		return
+	}
+
+	err = SITE.Load()
+	if os.IsNotExist(err) {
+		err = SITE.CreateDefault()
+	}
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func HealDirectories() (err error) {
+	var allPaths = []string{
+		RESOURCE_DIR,
+		TEMPLATE_FOLDER, IMAGES_FOLDER, STYLES_FOLDER, SCRIPTS_FOLDER,
+		CONTENT_DIR,
+		BLOG_FOLDER, ARTICLE_FOLDER, BACKUPS_FOLDER,
+	}
+
+	for _, path := range allPaths {
+		_, err = os.Stat(path)
+		if os.IsNotExist(err) {
+			err = os.Mkdir(path, 0755)
+			if err != nil {
+				return errors.New(fmt.Sprint(err, "\"", path, "\""))
+			}
+		} else if err != nil {
+			return
+		}
+	}
+
+	if _, err = os.Stat(SITE_SETTINGS); os.IsNotExist(err) {
+		file, e := os.Create(SITE_SETTINGS)
+		defer file.Close()
+		if e != nil {
+			return e
+		}
+	}
+
+	return
+}
+
+/* --- PATH SETTINGS --- */
+var PATH_SETTINGS = path.Join(SETTINGS_DIR, "path.JSON")
+
+type pathSettings struct {
+	ContentDirectoryPath  string `json:"content"`
+	ResourceDirectoryPath string `json:"resource"`
 }
 
 /* The resource directory holds all the file that will be served statically.
@@ -38,23 +106,13 @@ var (
 	BACKUPS_FOLDER = "backups"
 )
 
-/* The settings directory contains JSON's files that admin can use to edit
- * some server options. Edits will be applied on server reloading
- */
-const SETTINGS_DIR = "settings"
-
-// List of all setting's file inside the directory
-var (
-	PATH_SETTINGS = path.Join(SETTINGS_DIR, "path.JSON")
-)
-
 func AddDirPath(directoryName string, folders ...*string) {
 	for _, folderPath := range folders {
 		*folderPath = path.Join(directoryName, *folderPath)
 	}
 }
 
-func CreateDefaultSettings() (err error) {
+func (s pathSettings) CreateDefault() (err error) {
 	var (
 		file        *os.File
 		jsonContent []byte
@@ -68,10 +126,9 @@ func CreateDefaultSettings() (err error) {
 	}
 
 	// Set the default paths values
-	var sets = settings{
-		ResourceDirectoryPath: RESOURCE_DIR,
-		ContentDirectoryPath:  CONTENT_DIR,
-	}
+	s.ResourceDirectoryPath = RESOURCE_DIR
+	s.ContentDirectoryPath = CONTENT_DIR
+
 	AddDirPath(CONTENT_DIR, &BLOG_FOLDER, &ARTICLE_FOLDER, &BACKUPS_FOLDER)
 	AddDirPath(RESOURCE_DIR, &TEMPLATE_FOLDER, &IMAGES_FOLDER, &STYLES_FOLDER, &SCRIPTS_FOLDER)
 
@@ -82,7 +139,7 @@ func CreateDefaultSettings() (err error) {
 	}
 
 	// Convert to json
-	jsonContent, err = json.MarshalIndent(sets, "", "\t")
+	jsonContent, err = json.MarshalIndent(s, "", "\t")
 	if err != nil {
 		return
 	}
@@ -92,51 +149,56 @@ func CreateDefaultSettings() (err error) {
 	return err
 }
 
-func LoadSettings() (err error) {
-	var (
-		jsonContent []byte
-		sets        settings
-	)
-
-	jsonContent, err = os.ReadFile(PATH_SETTINGS)
-	if os.IsNotExist(err) {
-		err = CreateDefaultSettings()
-		if err != nil {
-			return
-		}
+func (s *pathSettings) Load() error {
+	var jsonContent, err = os.ReadFile(PATH_SETTINGS)
+	if err != nil {
+		return err
 	}
 
-	err = json.Unmarshal(jsonContent, &sets)
+	err = json.Unmarshal(jsonContent, &s)
+	if err != nil {
+		return err
+	}
+
+	CONTENT_DIR = s.ContentDirectoryPath
+	AddDirPath(CONTENT_DIR, &BLOG_FOLDER, &ARTICLE_FOLDER, &BACKUPS_FOLDER)
+	RESOURCE_DIR = s.ResourceDirectoryPath
+	AddDirPath(RESOURCE_DIR, &TEMPLATE_FOLDER, &IMAGES_FOLDER, &STYLES_FOLDER, &SCRIPTS_FOLDER)
+
+	return err
+}
+
+/* --- SITE SETTINGS --- */
+var (
+	SITE_SETTINGS = path.Join(SETTINGS_DIR, "site.JSON")
+	SITE          SiteSettings
+)
+
+type SiteSettings struct {
+	Domain   string `json:"domain"`
+	Name     string `json:"name"`
+	About    string `json:"about"`
+	Language string `json:"language"`
+	Owner    string `json:"owner"`
+	Mail     string `json:"mail"`
+}
+
+func (s *SiteSettings) CreateDefault() (err error) {
+	err = errors.New("Missing site info")
+	return
+}
+
+func (s *SiteSettings) Load() (err error) {
+	var jsonContent []byte
+
+	jsonContent, err = os.ReadFile(SITE_SETTINGS)
 	if err != nil {
 		return
 	}
 
-	CONTENT_DIR = sets.ContentDirectoryPath
-	AddDirPath(CONTENT_DIR, &BLOG_FOLDER, &ARTICLE_FOLDER, &BACKUPS_FOLDER)
-	RESOURCE_DIR = sets.ResourceDirectoryPath
-	AddDirPath(RESOURCE_DIR, &TEMPLATE_FOLDER, &IMAGES_FOLDER, &STYLES_FOLDER, &SCRIPTS_FOLDER)
-
-	return
-}
-
-func HealDirectories() (err error) {
-	var allPaths = []string{
-		RESOURCE_DIR,
-		TEMPLATE_FOLDER, IMAGES_FOLDER, STYLES_FOLDER, SCRIPTS_FOLDER,
-		CONTENT_DIR,
-		BLOG_FOLDER, ARTICLE_FOLDER, BACKUPS_FOLDER,
-	}
-
-	for _, path := range allPaths {
-		_, err = os.Stat(path)
-		if os.IsNotExist(err) {
-			err = os.Mkdir(path, 0755)
-			if err != nil {
-				return
-			}
-		} else if err != nil {
-			return
-		}
+	err = json.Unmarshal(jsonContent, &s)
+	if err != nil {
+		return
 	}
 
 	return

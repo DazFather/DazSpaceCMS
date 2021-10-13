@@ -8,6 +8,7 @@ import (
 )
 
 type Data struct {
+	Site                   SiteSettings
 	StylesPath, ScriptPath string
 	Value                  interface{}
 }
@@ -31,6 +32,7 @@ func LoadTemplates(folderPath string) error {
 
 func Pack(obj interface{}) Data {
 	return Data{
+		Site:       SITE,
 		StylesPath: "/" + STYLES_FOLDER + "/",
 		ScriptPath: "/" + SCRIPTS_FOLDER + "/",
 		Value:      obj,

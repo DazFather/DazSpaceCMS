@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
     <head>
-        <title>DazSpace | {{.Value.Title}}</title>
+        <title>{{.Site.Name}} | {{.Value.Title}}</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- SEO -->
@@ -13,10 +13,10 @@
         <meta name="summary" content="{{.Value.Description}}">
         <meta name="author" content="{{.Value.Author}}, {{.Value.Author}}">
         <meta name="designer" content="Davide Lavermicocca, dlavermicocca99.uni@gmail.com">
-        <meta name="owner" content="Davide Lavermicocca, dlavermicocca99.uni@gmail.com">
-        <meta name="url" content="http://DazSpace.codes/blog/{{.Value.RelativeLink}}">
-        <meta name="identifier-URL" content="http://DazSpace.codes/blog/{{.Value.RelativeLink}}">
-        <meta name="pagename" content="DazSpace | {{.Value.Title}}">
+        <meta name="owner" content="{{.Site.Owner}}, {{.Site.Mail}}">
+        <meta name="url" content="{{.Site.Domain}}/blog/{{.Value.RelativeLink}}">
+        <meta name="identifier-URL" content="{{.Site.Domain}}/blog/{{.Value.RelativeLink}}">
+        <meta name="pagename" content="{{.Value.Title}} - {{.Site.Name}}">
         <meta name="coverage" content="Worldwide">
         <meta name="distribution" content="Global">
         <meta name="rating" content="general">
@@ -28,8 +28,8 @@
         <meta property="og:image" content="{{.Value.AttachedCover}}">
         <meta property="og:title" content="{{.Value.Title}}">
         <meta property="og:description" content="{{.Value.Description}}">
-        <meta property="og:url" content="https://DazSpace.codes/blog/{{.Value.RelativeLink}}">
-        <meta property="og:site_name" content="DazSpace">
+        <meta property="og:url" content="{{.Site.Domain}}/blog/{{.Value.RelativeLink}}">
+        <meta property="og:site_name" content="{{.Site.Name}}">
         <meta property="og:updated_time" content="{{.Value.Date}}">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{{.Value.Title}}">
@@ -44,7 +44,7 @@
     </head>
     <body>
         <nav id="navbar" class="flex-center">
-            <a href=".." class="gradient-link">DazSpace</a>
+            <a href=".." class="gradient-link">{{.Site.Name}}</a>
         </nav>
         <header class="article-header">
             <div class="bg cover">
