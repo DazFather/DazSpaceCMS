@@ -224,7 +224,7 @@ header h1::after {
 
 #myDescription {
     color: darkgray;
-    text-align: left;
+    text-align: center;
     margin: 1.5em auto;
     width: 40em;
     max-width: 85%;
@@ -257,6 +257,7 @@ main {
     background: var(--RedGradient);
     width: calc(95% - 4em);
     margin: 0 2em;
+    transition: width 0.5s, margin 0.5s;
 }
 
 /* ---- FOOTER ---- */
@@ -266,4 +267,11 @@ main {
     color: gray;
     height: 5.5em;
     overflow: auto;
+}
+
+@media (max-width: 800px) {
+    #myArticles {
+        width: 100%;
+        margin: 0;
+    }
 }

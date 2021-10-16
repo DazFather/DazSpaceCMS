@@ -86,7 +86,9 @@
                         {{range .Value}}
                             <article>
                                 {{if .Cover}}
-                                <img class="snippet-cover" src="{{.Cover}}" alt="Cover of the article: {{.Title}}">
+                                <a href="/blog/{{.Link}}">
+                                    <img class="snippet-cover" src="{{.Cover}}" alt="Cover of the article: {{.Title}}">
+                                </a>
                                 {{end}}
                                 <div class="snippet">
                                     <a class="title" href="/blog/{{.Link}}">{{.Title}}</a>
@@ -104,7 +106,9 @@
                 </section>
             </main>
             <footer id="footer" class="flex-center">
-                <p>This website has been made by me without any sitebuilder, CMS or framework.<br> Only in pure HTML and CSS. <a href="https://github.com/DazFather/DazSpaceCMS" class="gradient-link">Check out the code</a></p>
+                <p>
+                    This website has been made using my own custom server + CMS written in pure Go,<br> the forntend instead is made in pure vanilla. <a href="https://github.com/DazFather/DazSpaceCMS" class="gradient-link">Check out the code</a>
+                </p>
             </footer>
         </div>
     </body>
