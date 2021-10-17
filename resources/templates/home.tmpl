@@ -86,7 +86,11 @@
                         {{range .Value}}
                             <article>
                                 {{if .Cover}}
+<<<<<<< HEAD
                                 <img src="{{.Cover}}" class="snippet-cover" alt="Cover of the article: {{.Title}}" onclick="window.location.href = window.location.origin + '/blog/{{.Link}}';">
+=======
+                                <img src="{{.Cover}}" class="snippet-cover" alt="Cover of the article: {{.Title}}" onclick="window.location.href = window.location.origin + 'blog/{{.Link}}';">
+>>>>>>> 22038c497c2bcc25853de798192de459b3e5b2a6
                                 {{end}}
                                 <div class="snippet">
                                     <a class="title" href="/blog/{{.Link}}">{{.Title}}</a>
