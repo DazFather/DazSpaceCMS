@@ -275,6 +275,7 @@ main {
 
 .content h2 {
     font-size: 1.4em;
+    color: var(--White);
 }
 
 .content blockquote {
@@ -284,12 +285,39 @@ main {
     border-radius: 0.2em 0.2em 0.2em 0.5em;
     border-left: 0.3em solid var(--DarkCarbon);
     display: block;
+    overflow-x: auto;
 }
 
 .content pre {
     /*display: inline-block;*/
     max-width: 100%;
     overflow: auto;
+}
+
+.content table {
+    background-color: var(--DarkCarbon);
+    margin: 1em 0.5em;
+    border-radius: 0.5em;
+    box-shadow: 0 0 0.5em var(--DarkCarbon);
+}
+.content th {
+    padding: 0 0.5em;
+}
+.content tbody td {
+    background-color: var(--Carbon);
+    overflow: hidden;
+}
+.content tbody tr:first-child td:first-child {
+    border-top-left-radius: 0.4em;
+}
+.content tbody tr:first-child td:last-child {
+    border-top-right-radius: 0.4em;
+}
+.content tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 0.4em;
+}
+.content tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 0.4em;
 }
 
 #footer {

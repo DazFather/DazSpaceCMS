@@ -86,9 +86,7 @@
                         {{range .Value}}
                             <article>
                                 {{if .Cover}}
-                                <a href="/blog/{{.Link}}">
-                                    <img class="snippet-cover" src="{{.Cover}}" alt="Cover of the article: {{.Title}}">
-                                </a>
+                                <img src="{{.Cover}}" class="snippet-cover" alt="Cover of the article: {{.Title}}" onclick="window.location.href = window.location.origin + 'blog/{{.Link}}';">
                                 {{end}}
                                 <div class="snippet">
                                     <a class="title" href="/blog/{{.Link}}">{{.Title}}</a>

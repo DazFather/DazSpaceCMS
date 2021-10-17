@@ -58,9 +58,13 @@
                     {{range .Value.RelatedArticles}}
                         <article>
                             {{if .Cover}}
+<<<<<<< Updated upstream
                             <a href="/blog/{{.Link}}">
                                 <img class="snippet-cover" src="{{.Cover}}" alt="Cover of the article: {{.Title}}">
                             </a>
+=======
+                            <img class="snippet-cover" src="{{.Cover}}" alt="Cover of the article: {{.Title}}" onclick="window.location.href = window.location.origin + 'blog/{{.Link}}';">
+>>>>>>> Stashed changes
                             {{end}}
                             <div class="snippet">
                                 <a class="title" href="/blog/{{.Link}}">{{.Title}}</a>
