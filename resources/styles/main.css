@@ -131,6 +131,7 @@ a:visited {
     width: auto;
     display: inline-block;
     border-radius: inherit;
+    cursor: pointer;
 }
 
 .snippet-holder .title {
