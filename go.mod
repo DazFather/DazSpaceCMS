@@ -7,4 +7,4 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0
 )
 
-require golang.org/x/sys v0.0.0-20211013075003-97ac67df715c // indirect
+require golang.org/x/sys v0.0.0-20211020064051-0ec99a608a1b // indirect
