@@ -22,7 +22,7 @@ func scanHeader(scanner *bufio.Scanner, art *Article) (err error) {
 	var (
 		cover                   string
 		stylesName, scriptsName []string
-		headerLink              = regexp.MustCompile(`!\[[A-Z]+\]\([\w\./:%&\?!=\- \\]+\)`)
+		headerLink              = regexp.MustCompile(`^!\[[A-Z]+\](\([\w\./:%&\?!=\- \\]+\))+$`)
 	)
 
 	for scanner.Scan() {
@@ -47,9 +47,9 @@ func scanHeader(scanner *bufio.Scanner, art *Article) (err error) {
 			case "COVER":
 				cover = link[1]
 			case "SCRIPT":
-				scriptsName = append(scriptsName, link[1])
+				scriptsName = append(scriptsName, strings.Split(link[1], ")(")...)
 			case "STYLE":
-				stylesName = append(stylesName, link[1])
+				stylesName = append(stylesName, strings.Split(link[1], ")(")...)
 			case "DESCRIPTION":
 				art.Description = template.HTMLEscapeString(link[1])
 			}
