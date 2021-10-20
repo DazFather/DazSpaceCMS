@@ -21,14 +21,22 @@ var HandlerResources = http.StripPrefix(ResourcesPath,
 	http.FileServer(http.Dir("."+ResourcesPath)),
 )
 
-// Handle the homepage (.../ or .../index.html)
+// Handle the homepage ("", "index.html", "index", "home.html", "home")
 func HandlerHome(w http.ResponseWriter, r *http.Request) {
-	err := Compose(w, "home.tmpl", Cache.GenSnippets())
-	check("HandlerHome", err)
+	var page = strings.ToUpper(strings.TrimSuffix(r.URL.Path[1:], ".html"))
+
+	switch page {
+	case "", "INDEX", "HOME", "BLOG":
+		err := Compose(w, "home.tmpl", Cache.GenSnippets())
+		check("HandlerHome", err)
+	default:
+		Handle404(w, r)
+	}
 }
 
 // Handle the 404 Error
 func Handle404(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(404)
 	err := Compose(w, "404.tmpl", nil)
 	check("Handle404", err)
 }
