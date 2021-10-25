@@ -12,9 +12,10 @@ import (
 	"github.com/russross/blackfriday/v2"
 )
 
-func parse(text string) (parsed string) {
+// Transform a markdown text into HTML
+func parse(text string) (parsed template.HTML) {
 	var content = blackfriday.Run([]byte(text))
-	return string(content)
+	return template.HTML(content)
 }
 
 // Scan of the title, cover art and other attached resources
@@ -37,7 +38,6 @@ func scanHeader(scanner *bufio.Scanner, art *Article) (err error) {
 			continue
 
 		case strings.HasPrefix(line, "#"):
-			art.Title = strings.TrimSpace(line[1:])
 			art.Clip(cover, stylesName, scriptsName)
 			return
 
@@ -63,6 +63,7 @@ func scanHeader(scanner *bufio.Scanner, art *Article) (err error) {
 	return errors.New("Missing title")
 }
 
+// Parse a valid markdown file and return a pointer to a new article (and an error)
 func ReadArticle(filename string) (art *Article, err error) {
 	var (
 		file         *os.File
@@ -70,7 +71,7 @@ func ReadArticle(filename string) (art *Article, err error) {
 		isNewChapter bool
 		newArt       Article
 		nCap         = -1
-		paragraph    = regexp.MustCompile(`\s*</?p>\s*`)
+		paragraph    = regexp.MustCompile(`^\s*<p>|</p>\s*$|\s*<p>\s*</p>\s*`)
 	)
 
 	// Open the file creating to scan it
@@ -105,8 +106,9 @@ func ReadArticle(filename string) (art *Article, err error) {
 			return
 		}
 		if isNewChapter {
-			line = paragraph.ReplaceAllString((parse(line[2:])), "")
-			newArt.Chapters = append(newArt.Chapters, Chapter{Name: line})
+			line = strings.TrimSpace(line[2:])
+			line = paragraph.ReplaceAllString(string(parse(line)), "")
+			newArt.Chapters = append(newArt.Chapters, Chapter{Name: template.HTML(line)})
 			nCap++
 			continue
 		}
@@ -126,8 +128,7 @@ func ReadArticle(filename string) (art *Article, err error) {
 
 	// Parsing each content
 	for i, current := range newArt.Chapters {
-		parsed := parse(string(current.Content))
-		newArt.Chapters[i].Content = template.HTML("<p>" + parsed + "</p>")
+		newArt.Chapters[i].Content = parse(string(current.Content))
 	}
 
 	// Generete a description if not present

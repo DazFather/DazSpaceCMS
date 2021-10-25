@@ -16,6 +16,7 @@ body {
 }
 
 #navbar {
+    font-size: 1.25em;
     background-color: var(--DarkCarbon);
     box-shadow: 0 0 1em var(--Carbon);
     height: 2.5em;

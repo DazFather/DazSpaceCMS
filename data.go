@@ -14,7 +14,7 @@ import (
 )
 
 type Chapter struct {
-	Name    string
+	Name    template.HTML
 	Content template.HTML
 }
 

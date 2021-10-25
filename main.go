@@ -68,6 +68,7 @@ func HandlerBlog(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check inside the contents
+	log.Println(Cache.savedArticles, "["+requested+"]")
 	content, err = os.ReadFile(path.Join(BLOG_FOLDER, requested+".html"))
 	if err != nil {
 		if !os.IsNotExist(err) {
