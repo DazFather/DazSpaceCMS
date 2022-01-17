@@ -27,8 +27,11 @@ Thanks to the **Template engine** you can edit as you want all the .tmpl files t
 It also very easily **support frameworks and external libraries** like Sass, Tailwind or Bootstrap. Or any other that allow you to have am html template and a css on their folders insider the resources directories.
 
 **Attach multiple extra stylesheets and JS files** even for single pages, by simply write:
-[!SCRIPT](link)(link2)(link3)... for scripts
-[!STYLE](link)(link2)(link3)... for stylesheets
+
+`[!SCRIPT](link)(link2)(link3)...` for scripts
+
+`[!STYLE](link)(link2)(link3)...` for stylesheets
+
 > if they are internal then you don't need to specify the full path but just the full name.
 
 
